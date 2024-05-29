@@ -12,23 +12,21 @@ library(ggplot2)
 library(wdpar)
 library(readxl)
 
-#1. Steps to download records from GBIF and OBIS.
-
-# I. For GBIF
-
+#Steps to download records from GBIF and OBIS.
+#I. For GBIF
 #Set Up Your GBIF Username and Password
 
-#install.packages("usethis")
+install.packages("usethis")
 usethis::edit_r_environ()
 
 #GBIF_USER="user"
 #GBIF_PWD="here..."
 #GBIF_EMAIL="here..."
 
-#install.packages("rgbif") 
+install.packages("rgbif") 
 library(rgbif)
 
-#The search is going to be organised by year, as the whole data set is heavy and the total of the records filtered by depth decrease from almost 500millions to about 30millions (see the manuscript for more insight about this)
+#The search is going to be organised by year,
 #GBIF allows up to three simultaneous downloads. To check the status of the download and to get the records from it, see step 2.
 
 # Step 1: Setting the request to the server.
@@ -242,9 +240,9 @@ gbifa_2020to23 = gbifa_2020to23[c("coordinateUncertaintyInMeters", "class", "dat
 
 # II. For OBIS, analogue procedure as with GBIF
 
-#install.packages("dismo")
+install.packages("dismo")
 library(dismo)
-#install.packages("robis")
+install.packages("robis")
 library(robis)
 
 #before 1900
