@@ -294,3 +294,5 @@ obisb_2015to19 = obisb_2015to19[c("coordinateUncertaintyInMeters", "class", "dat
 #obis_2020to23
 obisb_2020to23 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))", startdate = as.Date("2020-01-01"), enddate = as.Date("2023-12-31"), absence = NULL, flags = NULL)
 obisb_2020to23 = obisb_2020to23[c("coordinateUncertaintyInMeters", "class", "datasetName", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "eventID", "family", "id", "individualCount", "flags", "kingdom", "month", "scientificName", "taxonRank", "year")]
+
+###End of the script
