@@ -1,4 +1,5 @@
-setwd("//home.ansatt.ntnu.no/lcgarcia/Documents/R2")
+#charging libraries and directory
+setwd("//myDirectory/myFolder/myDocuments/R")
 
 library(janitor)
 library(tibble)
@@ -31,8 +32,8 @@ library(rgbif)
 
 # Step 1: Setting the request to the server.
 
-#before 1900
-gbif_b1900 <- occ_download(
+#between 1876 and 1899
+gbif_1876to99 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
   pred("occurrenceStatus","PRESENT"), 
@@ -171,9 +172,9 @@ gbif_2020to23 <- occ_download(
 
 #Step 2: Checking the status of the download in the server and retrieving the datasets in R. 
 
-#i.e. > gbif_b1900 (here are the citation guidelines). To check the status and import the download:
-occ_download_wait(head(gbif_b1900))
-gbifa_b1900 <- occ_download_get(head(gbif_b1900)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
+#i.e. > gbif_1876to99 (here are the citation guidelines). To check the status and import the download:
+occ_download_wait(head(gbif_1876to99))
+gbifa_1876to99 <- occ_download_get(head(gbif_1876to99)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
 #i.e. > gbif_1900to49
 occ_download_wait(head(gbif_1900to49))
@@ -221,7 +222,7 @@ gbifa_2020to23 <- occ_download_get(head(gbif_2020to23)) %>% occ_download_import(
 
 # Step 3: Select the fields that you need to work with.
 
-gbifa_b1900 = gbifa_b1900[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
+gbifa_1876to99 = gbifa_1876to99[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
 gbifa_1900to49 = gbifa_1900to49[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
 gbifa_1950to59 = gbifa_1950to59[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
 
@@ -245,9 +246,9 @@ library(dismo)
 install.packages("robis")
 library(robis)
 
-#before 1900
-obisb_b1900 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))", enddate = as.Date("1899-12-31"), absence = NULL, flags = NULL)
-obisb_b1900 = obisb_b1900[c("coordinateUncertaintyInMeters", "class", "datasetName", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "eventID", "family", "id", "individualCount", "flags", "kingdom", "month", "scientificName", "taxonRank", "year")]
+#obis_1876to99
+obisb_1876to99 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))", enddate = as.Date("1899-12-31"), absence = NULL, flags = NULL)
+obisb_1876to99 = obisb_1876to99[c("coordinateUncertaintyInMeters", "class", "datasetName", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "eventID", "family", "id", "individualCount", "flags", "kingdom", "month", "scientificName", "taxonRank", "year")]
 
 #obis_1900to49
 obisb_1900to49 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))", startdate = as.Date("1900-01-01"), enddate = as.Date("1949-12-31"), absence = NULL, flags = NULL)
@@ -293,4 +294,5 @@ obisb_2015to19 = obisb_2015to19[c("coordinateUncertaintyInMeters", "class", "dat
 obisb_2020to23 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))", startdate = as.Date("2020-01-01"), enddate = as.Date("2023-12-31"), absence = NULL, flags = NULL)
 obisb_2020to23 = obisb_2020to23[c("coordinateUncertaintyInMeters", "class", "datasetName", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "eventID", "family", "id", "individualCount", "flags", "kingdom", "month", "scientificName", "taxonRank", "year")]
 
+#Every time slot can be saves as a separate archive to process with the following scripts.
 ###End of the script
