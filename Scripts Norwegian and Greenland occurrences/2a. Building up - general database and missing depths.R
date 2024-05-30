@@ -1,4 +1,5 @@
-setwd("//home.ansatt.ntnu.no/lcgarcia/Documents/R")
+#charging libraries and directory
+setwd("//myDirectory/myFolder/myDocuments/R")
 
 library(janitor)
 library(tibble)
@@ -10,11 +11,12 @@ library(s2)
 library(stars)
 library(ggplot2)
 library(wdpar)
+library(readxl)
 
-#Formatting the database (and adding the norwegian expedition for b1900)
+#I. Formatting the database (and adding the norwegian expedition for the 1876-1899 time slot).
 
-#I. Formatting in order to bind databases and sucessfully get the "depthAccuracy" field, ONLY PRESENT IN GBIF
-#Change the years accordingly to the desired downloads.
+#Formatting in order to bind databases and get the "depthAccuracy" field in both, which is only present in GBIF
+#Change the years accordingly to the required downloads.
 
 gbifa_b1900 -> a
 obisb_b1900 -> b
@@ -28,8 +30,6 @@ colnames(a)[13] = "flags"
 a$database = "gbif"
 b$database = "obis"
 
-#now binding both dataframes (OBIS and GBIF)
-
 a = as.data.frame(a)
 b = as.data.frame(b)
 
@@ -37,14 +37,11 @@ a$id = as.character(a$id)
 a$dateIdentified = as.character(a$dateIdentified)
 databases = rbind(a,b)
 
-############
-
-#To import to ArcGIS,it is necessary to rename the fields for coordinates as follows. Also to keep the coordinates for R:
+#If it is needed to import to ArcGIS, rename the fields for coordinates as follows. This keeps both the required formatting for ArcGIS and the coordinates for working in R:
 
 databases$YCoord = databases$decimalLatitude
 databases$XCoord = databases$decimalLongitude
 
-#some more formatting
 databases$year = as.numeric(databases$year)
 databases$month = as.numeric(databases$month)
 databases$day = as.numeric(databases$day)
@@ -52,7 +49,6 @@ databases$coordinateUncertaintyInMeters = as.numeric(databases$coordinateUncerta
 databases$individualCount = as.numeric(databases$individualCount)
 
 databases$scientificName = str_extract(string = databases$scientificName, pattern = "[a-zA-Z]{1,25}\\s{1}[a-z]{2,25}")
-
 
 #II. Masking the landshape out of databases
 
@@ -66,8 +62,7 @@ y_int <- st_intersects(y,x)
 y_log <- lengths(y_int) == 0 
 databases_mkd <- y[y_log, ]
 
-
-#correction for day and coordinate's fields names
+#Correction for day and coordinate's fields names
 
 colnames(databases_mkd)[5] = "day"
 colnames(databases_mkd)[7] = "XCoord"
@@ -75,11 +70,8 @@ colnames(databases_mkd)[6] = "YCoord"
 
 databases_mkd <- as.data.frame(databases_mkd)
 
-
-#Recovering coordinates from geometry field
-#st_coordinates(dbs_mkd_taxa$geometry)[,2]
-############
-###Only running once per all the datasets throughout the time series
+#III. Importing contours previously designed in ArcGIS. For this, use the Analysis Tools and Overlay Toolboxes, or the Contour tool in the Spatial Analyst Tools.
+###Only running once for working with all the datasets throughout the time series.
 
 #Verifying geometries of contours in R (contours produced in ArcGIS)
 
@@ -88,7 +80,7 @@ st_is_valid(x, reason = TRUE)
 x <- st_repair_geometry(x)
 st_is_valid(x, reason = TRUE)
 
-    #Removed the polygon which geometry has not been corrected
+    #If needed, use this example to remove a polygon which geometry has not been corrected
     w <- x[147,]
 
     ggplot() +
@@ -158,21 +150,21 @@ st_write(x, "contour3500_4000.shp")
 
 ##
 
-#This contour needed an additional correction in ArcGIS (vertex went out of boundaries)
-x <- st_read("contour4000_4500.shp")
-st_is_valid(x, reason = TRUE)
-x <- st_repair_geometry(x)
-st_is_valid(x, reason = TRUE)
-
-st_write(x, "contour4000_4500.shp")
-
-##
-x <- st_read("contour4500_5000.shp")
-st_is_valid(x, reason = TRUE)
-x <- st_repair_geometry(x)
-st_is_valid(x, reason = TRUE)
-
-st_write(x, "contour4500_5000.shp")
+#Use this if the contour needs an additional correction in ArcGIS (i.e. vertex went out of boundaries, then exporting and importing again). 
+  x <- st_read("contour4000_4500.shp")
+  st_is_valid(x, reason = TRUE)
+  x <- st_repair_geometry(x)
+  st_is_valid(x, reason = TRUE)
+  
+  st_write(x, "contour4000_4500.shp")
+  
+  ##
+  x <- st_read("contour4500_5000.shp")
+  st_is_valid(x, reason = TRUE)
+  x <- st_repair_geometry(x)
+  st_is_valid(x, reason = TRUE)
+  
+  st_write(x, "contour4500_5000.shp")
 
 ##
 x <- st_read("contour5000_5500.shp")
@@ -190,7 +182,7 @@ st_is_valid(x, reason = TRUE)
 
 st_write(x, "contour5500_6000.shp")
 
-### Isolated polygon. All the nodepth points that are not masked by contours, should coincide with the geometry of this polygon.
+### If there is an isolated polygon. All the nodepth points that are not masked by contours, should coincide with the geometry of this polygon.
 
 x <- st_read("polygon.shp")
 st_is_valid(x, reason = TRUE)
@@ -199,12 +191,10 @@ st_is_valid(x, reason = TRUE)
 
 ########
 
-# The polygon will be added after the following steps (masking by depth and latitude, see next script)
-
+# The polygon will be added after the following steps (when masking by depth and latitude, see script 3b).
 
 ###III. Including the Norwegian expedition
 
-library(readxl)
 #Run this with the R assistant if there is any trouble
 norwegian_expedition_database <- read_excel("~/R/norwegian_expedition_database.xlsx", 
                                               +     col_types = c("numeric", "numeric", "text", 
@@ -325,6 +315,7 @@ colnames(databases_mkd_nor)[7] = "XCoord"
 colnames(databases_mkd_nor)[6] = "YCoord"
 
 #add to GBIF+OBIS (databases_mkd)
-#load("~/R/1xxx_1900a.RData")
-#load("~/R/1xxx_1900b.RData")
+#load("~/R/1876_1899a.RData")
 databases_mkd = rbind(databases_mkd,databases_mkd_nor)
+
+###End of the script
