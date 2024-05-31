@@ -14,6 +14,48 @@ library(ggplot2)
 library(wdpar)
 library(readxl)
 
+#IV. Calculate the summaries for the time-series
+
+#Overall counts
+for (i in 1:length(names)){
+  if (i == 1){
+    counts <- nrow(get(names[i]))
+  }
+  else{
+    counts <- counts + nrow(get(names[i]))
+  }
+}
+counts
+rm(i)
+
+#Getting the abundances and species richness per time period
+
+abundances_ts <- c()
+s_richness_ts <- c()
+for (i in 1:length(namesShallowDeep)){
+  
+  setone <- get(namesShallowDeep[i])
+  sp_list_abundances <- setone %>% arrange(scientificName) %>% group_by(scientificName, kingdom, class, family) %>% summarise(abundance = sum(individualCount)) %>% filter(grepl("[a-zA-Z]{1,25}\\s{1}[a-z]{2,25}", scientificName))
+  sp_list <- sp_list_abundances[c("scientificName","abundance")] %>% arrange(scientificName) %>% group_by(scientificName) %>% summarise(abundance = sum(abundance))
+
+  abundances <- sum(sp_list$abundance)
+  s_richness <- nrow(sp_list)
+
+  abundances_ts[i] <- abundances
+  s_richness_ts[i] <- s_richness
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 ##For keeping running
 #setwd("//home.ansatt.ntnu.no/lcgarcia/Documents/R")
