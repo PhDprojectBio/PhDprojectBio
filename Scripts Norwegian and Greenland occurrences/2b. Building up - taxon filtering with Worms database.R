@@ -216,3 +216,5 @@ dbs_mkd_taxa$individualCount[dbs_mkd_taxa$individualCount < 0] <- (dbs_mkd_taxa$
 dbs_mkd_taxa$individualCount[dbs_mkd_taxa$individualCount == 0] <- 1
 
 rm(i,n)
+
+###End of the script
