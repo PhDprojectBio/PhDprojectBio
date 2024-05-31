@@ -317,5 +317,6 @@ colnames(databases_mkd_nor)[6] = "YCoord"
 #join to GBIF+OBIS (databases_mkd)
 #load("~/R/1876_1899a.RData")
 databases_mkd = rbind(databases_mkd,databases_mkd_nor)
+#Save this together with 1876_99a.RData, to now include the Norwegian Expedition files.
 
 ###End of the script
