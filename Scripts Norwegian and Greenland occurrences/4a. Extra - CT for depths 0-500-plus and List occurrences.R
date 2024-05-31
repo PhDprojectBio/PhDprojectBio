@@ -1,6 +1,5 @@
-#With list occurrences
-
-setwd("//home.ansatt.ntnu.no/lcgarcia/Documents/R")
+#loading libraries and directory
+setwd("//myDirectory/myFolder/myDocuments/R")
 
 library(janitor)
 library(tibble)
@@ -14,11 +13,8 @@ library(ggplot2)
 library(wdpar)
 library(vegan)
 
-#Building up convergence tables for each latitude (after comparing the latitudes with component analysis?, clustering?)
 
-#### convergence with abundances
-
-#Getting a table with the records of all the species in the corresponding time window
+#Getting the records of all the species in the corresponding time window
 
 sp_list_abundances <- dbs_mkd_taxa_new %>% arrange(scientificName) %>% group_by(scientificName, kingdom, class, family) %>% summarise(abundance = sum(individualCount)) %>% filter(grepl("[a-zA-Z]{1,25}\\s{1}[a-z]{2,25}", scientificName))
 sp_list <- sp_list_abundances[c("scientificName","abundance")] %>% arrange(scientificName) %>% group_by(scientificName) %>% summarise(abundance = sum(abundance))
