@@ -12,7 +12,6 @@ library(stars)
 library(ggplot2)
 library(wdpar)
 
-
 #I. Finding duplicates in the database without splitting it first in latitudinal bands (if coming from all the periods from the time-series)
 
 dbs_mkd_taxa_new = dbs_mkd_taxa_newdepths %>% filter(taxonRank == "FORM" | taxonRank == "Species" | taxonRank == "SPECIES" | taxonRank == "SUBSPECIES" | taxonRank == "UNRANKED" | taxonRank == "VARIETY" | is.na(taxonRank))
