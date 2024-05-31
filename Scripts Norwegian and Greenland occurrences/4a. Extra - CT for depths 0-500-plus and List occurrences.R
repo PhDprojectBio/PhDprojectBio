@@ -139,7 +139,7 @@ for (i in 1:length(names)){
 counts
 rm(i)
 
-#Getting the records of all the species per time period
+#Getting the abundances and species richness per time period
 
 abundances_ts <- c()
 s_richness_ts <- c()
@@ -156,17 +156,17 @@ for (i in 1:length(namesShallowDeep)){
   s_richness_ts[i] <- s_richness
 }
 
-  #establishing auxiliary vectors
-  e <- 1
-  test2 <- c()
+#establishing auxiliary vectors
+e <- 1
+test2 <- c()
 
-  for(i in 56:84){
-    test2[e] <- gsub(" ","", paste("l",i))
-    e = e +1
-  }
+for(i in 56:84){
+  test2[e] <- gsub(" ","", paste("l",i))
+  e = e +1
+}
 
-  testb <- test[1:20]
-  testc <- test2[1:5]
+testb <- test[1:20] #for test, see script
+testc <- test2[1:5]
 
   rm(e)
 
