@@ -12,8 +12,8 @@ library(stars)
 library(ggplot2)
 library(wdpar)
 
-#Correct back to dbs_mkd_taxa_new if necessary, 
-#to find duplicates in the database without splitting it first in latitudinal bands (if coming from all the periods from the time-series)
+
+#I. Finding duplicates in the database without splitting it first in latitudinal bands (if coming from all the periods from the time-series)
 
 dbs_mkd_taxa_new = dbs_mkd_taxa_newdepths %>% filter(taxonRank == "FORM" | taxonRank == "Species" | taxonRank == "SPECIES" | taxonRank == "SUBSPECIES" | taxonRank == "UNRANKED" | taxonRank == "VARIETY" | is.na(taxonRank))
 
@@ -27,7 +27,6 @@ m <- 1
 p <- 1
 init <- 55.95
 test <- c()
-last <- data.frame()
 
 for(i in 1:length(namesSimple)){
 
@@ -55,8 +54,7 @@ for(i in 1:length(namesSimple)){
     newtest <- 1
     v <- data.frame()
     lasttest <- 1
-    #last <- data.frame()
-    
+        
     for (a in 1:nrow(link)){
       t <- df2 %>% filter(scientificName == link$scientificName[a])
       assign(gsub(" ","",paste(namesSimple[i],"_sp_dups","_sp",a)),t)
@@ -64,24 +62,13 @@ for(i in 1:length(namesSimple)){
       
       object <- get(newtest[a])
       h <- h + 1
-      #newlist <- list()
-      #newlink <- data.frame()
+      newlist <- list()
+      newlink <- data.frame()
       
       z <- object %>% distinct(YCoord, XCoord, depth, day, month, year, scientificName, .keep_all = TRUE)
-      
-      #while(h > 0){
-      #y <- print(object %>% filter(duplicated(object$YCoord) & duplicated(object$XCoord) & duplicated(object$depth) & duplicated(object$day) & duplicated(object$month) & duplicated(object$year) & duplicated(object$scientificName) & !duplicated (object$database)))
-      #object = object[!(duplicated(object$YCoord) & duplicated(object$XCoord) & duplicated(object$depth) & duplicated(object$day) & duplicated(object$month) & duplicated(object$year) & duplicated(object$scientificName) & !duplicated (object$database)),]
-      #h <- nrow(y)
-      #newlist[[m]] <- y
-      #newlink <- do.call("rbind",newlist)
-      #m <- nrow(newlink) + 100
-      #assign(gsub(" ","",paste(newtest[a],"_dups")), newlink)
-      #}
-      
+     
       newlink <- anti_join(t, z)
       assign(gsub(" ","",paste(newtest[a],"_dups")), newlink)
-      #z <- anti_join(t, newlink)
       assign(gsub(" ","",paste(newtest[a],"_nodups")), z)
       
       if (a == 1){
@@ -92,8 +79,7 @@ for(i in 1:length(namesSimple)){
         all <- anti_join(get(lasttest[a-1]), newlink)
       }
       
-      #to name the set that has no duplicates
-      #last[a] <- 
+      #naming the set that has no duplicates
       assign(gsub(" ","",paste(namesSimple[i],"_sp_nodups")),all)
       
       #to call all the duplicates that progressively accumulate in one vector and remove them progressively from the total of results for the corresponding latitude (anti_join used above)
@@ -121,12 +107,10 @@ for(i in 1:length(namesSimple)){
   }
 }  
 
-spp_level
-dbs_newlength
 rm(all)
 rm(i,a,e,f,k,h,l,m,p)
 
-#To only remove the duplicates for only one period:
+#II. To only remove the duplicates for only one period
 
 dbs_mkd_taxa_new = dbs_mkd_taxa_newdepths %>% filter(taxonRank == "FORM" | taxonRank == "Species" | taxonRank == "SPECIES" | taxonRank == "SUBSPECIES" | taxonRank == "UNRANKED" | taxonRank == "VARIETY" | is.na(taxonRank))
 
@@ -140,7 +124,6 @@ m <- 1
 p <- 1
 init <- 55.95
 test <- c()
-last <- data.frame()
 
 df <- dbs_mkd_taxa_new
 df2 <- dbs_mkd_taxa_new
@@ -163,8 +146,7 @@ if (nrow(link) > 0){
   newtest <- 1
   v <- data.frame()
   lasttest <- 1
-  #last <- data.frame()
-  
+   
   for (a in 1:nrow(link)){
     t <- df2 %>% filter(scientificName == link$scientificName[a])
     assign(gsub(" ","",paste("period_sp_dups","_sp",a)),t)
@@ -172,24 +154,13 @@ if (nrow(link) > 0){
     
     object <- get(newtest[a])
     h <- h + 1
-    #newlist <- list()
-    #newlink <- data.frame()
+    newlist <- list()
+    newlink <- data.frame()
     
     z <- object %>% distinct(YCoord, XCoord, depth, day, month, year, scientificName, .keep_all = TRUE)
     
-    #while(h > 0){
-    #y <- print(object %>% filter(duplicated(object$YCoord) & duplicated(object$XCoord) & duplicated(object$depth) & duplicated(object$day) & duplicated(object$month) & duplicated(object$year) & duplicated(object$scientificName) & !duplicated (object$database)))
-    #object = object[!(duplicated(object$YCoord) & duplicated(object$XCoord) & duplicated(object$depth) & duplicated(object$day) & duplicated(object$month) & duplicated(object$year) & duplicated(object$scientificName) & !duplicated (object$database)),]
-    #h <- nrow(y)
-    #newlist[[m]] <- y
-    #newlink <- do.call("rbind",newlist)
-    #m <- nrow(newlink) + 100
-    #assign(gsub(" ","",paste(newtest[a],"_dups")), newlink)
-    #}
-    
     newlink <- anti_join(t, z)
     assign(gsub(" ","",paste(newtest[a],"_dups")), newlink)
-    #z <- anti_join(t, newlink)
     assign(gsub(" ","",paste(newtest[a],"_nodups")), z)
     
     if (a == 1){
@@ -200,8 +171,7 @@ if (nrow(link) > 0){
       all <- anti_join(get(lasttest[a-1]), newlink)
     }
     
-    #to name the set that has no duplicates
-    #last[a] <- 
+    #naming the set that has no duplicates
     assign("period_sp_nodups",all)
     
     #to call all the duplicates that progressively accumulate in one vector and remove them progressively from the total of results for the corresponding latitude (anti_join used above)
@@ -211,25 +181,23 @@ if (nrow(link) > 0){
   dbs_mkd_taxa_new <- all
 }
 
-#spp_level
-#dbs_newlength
 rm(all)
 rm(i,a,e,f,k,h,l,m,p)
 
-###Creating the permanent dataset and depth intervals for before the 1900s
+#III. Creating the permanent dataset and depth intervals for before the 1900s.
 
-dbs_mkd_taxa_new1xxx_1899 <- dbs_mkd_taxa_new
+dbs_mkd_taxa_new1876_99 <- dbs_mkd_taxa_new
 
-#dividing in 0-500 and 500+ (can be performed for every period, changing the input)
+#dividing in 0-500 and 500+ (can be run for every period, if changing the input)
 
-dbs_mkd_taxa_new1xxx_1899_shallow <- dbs_mkd_taxa_new1xxx_1899 %>% filter(depth<500)
-dbs_mkd_taxa_new1xxx_1899_deep <- dbs_mkd_taxa_new1xxx_1899 %>% filter(depth>=500)
+dbs_mkd_taxa_new1876_99_shallow <- dbs_mkd_taxa_new1876_99 %>% filter(depth<500)
+dbs_mkd_taxa_new1876_99_deep <- dbs_mkd_taxa_new1876_99 %>% filter(depth>=500)
 
-namesShallow <- c("dbs_mkd_taxa_new1xxx_1899_shallow", namesShallow)
-namesDeep <- c("dbs_mkd_taxa_new1xxx_1899_deep", namesDeep)
+namesShallow <- c("dbs_mkd_taxa_new1876_99_shallow", namesShallow)
+namesDeep <- c("dbs_mkd_taxa_new1876_99_deep", namesDeep)
 namesShallowDeep <- c(namesShallow,namesDeep)
 
-#Removing duplicates + splitting in latitudes (if coming from a one period of the time-series and the output is the no-duplicates per latitudinal band)
+#IV. Removing duplicates + splitting in latitudes (if the input is a period of the time-series and the output is no-duplicates per latitudinal band for this period)
 
 # All records (with landshape records masked out before)
 a <- 1
@@ -242,7 +210,6 @@ m <- 1
 p <- 1
 init <- 55.95
 test <- c()
-last <- data.frame()
 
 #splitting by latitudinal bands every degree and filtering out duplicates
 
@@ -262,7 +229,6 @@ for(i in 56:84){
     e = e +1
   }
 }
-
 
 i <- 1
 mn <- 0
@@ -315,8 +281,7 @@ for (i in 1:length(test)){
     newtest <- 1
     v <- data.frame()
     lasttest <- 1
-    #last <- data.frame()
-    
+        
     for (a in 1:nrow(link)){
       t <- df2 %>% filter(scientificName == link$scientificName[a])
       assign(gsub(" ","",paste(test[i],"_sp_dups","_sp",a)),t)
@@ -324,24 +289,13 @@ for (i in 1:length(test)){
       
       object <- get(newtest[a])
       h <- h + 1
-      #newlist <- list()
-      #newlink <- data.frame()
+      newlist <- list()
+      newlink <- data.frame()
       
       z <- object %>% distinct(YCoord, XCoord, depth, day, month, year, scientificName, .keep_all = TRUE)
       
-      #while(h > 0){
-        #y <- print(object %>% filter(duplicated(object$YCoord) & duplicated(object$XCoord) & duplicated(object$depth) & duplicated(object$day) & duplicated(object$month) & duplicated(object$year) & duplicated(object$scientificName) & !duplicated (object$database)))
-        #object = object[!(duplicated(object$YCoord) & duplicated(object$XCoord) & duplicated(object$depth) & duplicated(object$day) & duplicated(object$month) & duplicated(object$year) & duplicated(object$scientificName) & !duplicated (object$database)),]
-        #h <- nrow(y)
-        #newlist[[m]] <- y
-        #newlink <- do.call("rbind",newlist)
-        #m <- nrow(newlink) + 100
-        #assign(gsub(" ","",paste(newtest[a],"_dups")), newlink)
-      #}
-      
       newlink <- anti_join(t, z)
       assign(gsub(" ","",paste(newtest[a],"_dups")), newlink)
-      #z <- anti_join(t, newlink)
       assign(gsub(" ","",paste(newtest[a],"_nodups")), z)
       
       if (a == 1){
@@ -353,7 +307,6 @@ for (i in 1:length(test)){
       }
       
       #to name the set that has no duplicates
-      #last[a] <- 
       assign(gsub(" ","",paste(test[i],"_sp_nodups")),all)
       
       #to call all the duplicates that progressively accumulate in one vector and remove them progressively from the total of results for the corresponding latitude (anti_join used above)
@@ -381,8 +334,7 @@ for (i in 1:length(test)){
   }
 }  
 
-#nrow(spp_level_all)
-spp_level
-dbs_newlength
 rm(all)
 rm(i,a,e,f,k,h,l,m,p)
+
+###End of the script
