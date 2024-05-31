@@ -314,7 +314,7 @@ databases_mkd_nor <- rbind(databases_mkd_nor, nor_exp_NA)
 colnames(databases_mkd_nor)[7] = "XCoord"
 colnames(databases_mkd_nor)[6] = "YCoord"
 
-#add to GBIF+OBIS (databases_mkd)
+#join to GBIF+OBIS (databases_mkd)
 #load("~/R/1876_1899a.RData")
 databases_mkd = rbind(databases_mkd,databases_mkd_nor)
 
