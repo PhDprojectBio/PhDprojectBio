@@ -185,6 +185,12 @@ for (i in 1:length(test)){
 rm(all)
 rm(i,a,e,f,k,h,l,m,p)
 
+
+#####################################
+
+
+
+
 #VI. Converting to shapes, an example
   
   shp <- st_as_sf(x = dataset,                         
@@ -195,5 +201,4 @@ rm(i,a,e,f,k,h,l,m,p)
 }
 rm(i)
 
-
-
+###End of the script
