@@ -1,4 +1,5 @@
-setwd("//home.ansatt.ntnu.no/lcgarcia/Documents/R")
+#charging libraries and directory
+setwd("//myDirectory/myFolder/myDocuments/R")
 
 library(janitor)
 library(tibble)
@@ -12,9 +13,9 @@ library(ggplot2)
 library(wdpar)
 library(readxl)
 
-#taxon filtering with Worms database
+#2b. Taxon filtering with WoRMS database
 
-#Masking the groups that would not correspond to the marine environment (depending on the scope of the study)
+#I. Masking the groups that would not correspond to the marine environment (depending on the scope of the study)
 
 unique(databases_mkd$kingdom)
 unique(databases_mkd$class)
@@ -29,50 +30,29 @@ for (i in exc_class){
   dbs_mkd_taxa <- dbs_mkd_taxa %>% filter(class != i)
 }
 
-#to keep the number
-dbs_mkd_taxa_detgroups <- dbs_mkd_taxa
+#II. Reading information from WoRMS in order to determine which families are non-marine
 
-######################
-
-#Read worms information in order to determine which families are non-marine
-##### !!! Another filter
 taxon <- read.delim("~/R/taxon.txt") %>% filter(taxonomicStatus == "accepted")
 speciesprofile <- read.delim("~/R/speciesprofile.txt")
-#unique(taxon$taxonRank)
-
-#worms2 <- right_join(taxon[,c(1,6,11:20,30)] %>% filter(taxonRank == "Species" | taxonRank == "Variety" | taxonRank == "Subspecies" | taxonRank == "Subsection" | taxonRank == "Forma" | taxonRank == "Subvariety" | taxonRank == "Subforma"), speciesprofile %>% filter(isMarine == 1 & isExtinct != 1), by = "taxonID")
-#speciesprofile %>% filter(isExtinct == 1)
-#[1] taxonID       isMarine      isFreshwater  isTerrestrial isExtinct     isBrackish   
-#<0 rows> (or 0-length row.names)
+unique(taxon$taxonRank) #verify that the taxonomic level corresponds to species.
 worms <- right_join(taxon[,c(1,6,11:20,30)], speciesprofile %>% filter(isMarine == 1), by = "taxonID")
 unique(dbs_mkd_taxa$kingdom)
 unique(dbs_mkd_taxa$class)
-#write.table(unique(dbs_mkd_taxa$class),file = "dbs_mkd_taxa_class.csv", sep = ,, row.names = FALSE, quote = FALSE)
 families_db <- unique(dbs_mkd_taxa$family)
 families_worms <- unique(worms$family)
-
-#which <- which(log_fam2 == 2)
-#log_fam2[log_fam2 == 2]
-
-#n <- 1
-#rm(i)
-
-#for(i in which){
-  #print(unique(families_worms == families_db[i]))
-#}
 
 n <- 1
 rm(i)
 max_log <- c()
 
-# To see the match that was true (FALSE,NA,TRUE), we choose the maximum logical output
+# To see TRUE matches, we choose the maximum logical output, as this contains TRUE results.
+
 for(i in families_db){
   max_log[i] <- length(unique(families_worms == i))
 }
-
 max(max_log)
 
-#Remove NAs
+#Removing NAs
 
 unique(max_log)
 length(families_db)
@@ -82,7 +62,7 @@ if(length(which(max_log == 1))>0) {
 }
 length(families_db)
 
-#Repeat without NA
+#Repeat the previous operation after removing NA records (there was not a match with records that can be contrasted with the information in WoRMS)
 
 n <- 1
 rm(i)
@@ -93,17 +73,8 @@ for(i in families_db){
 }
 
 unique(max_log)
-
 vector2false <- which(max_log == 2) #non-marine
 vector3true <- which(max_log == 3) #marine
-
-#Verification for Fringilla
-#which(names(vector2false) =="Fringillidae")
-#which(names(vector3true) =="Fringillidae")
-#which(families_db =="Fringillidae")
-#which(dbs_mkd_taxa$scientificName == "Fringilla montifringilla")
-#write.csv(vector3true, file = "marine_worms_toverify.txt")
-#vector3true[5]
 
 log_fam <- c()
 n <- 1
@@ -125,18 +96,14 @@ for(i in families_db){
 length(log_fam[log_fam == TRUE]) # Number of marine
 length(log_fam[log_fam == FALSE]) # Number of non-marine
 
-
 log_fam_nomar <- log_fam == FALSE
-mar_fam <- families_db[log_fam] #compare with all list 
-nomar_fam <- families_db[log_fam_nomar] #difference
+mar_fam <- families_db[log_fam] #subsample the marine families
+nomar_fam <- families_db[log_fam_nomar] #subsample the non-marine families
 
-#write.table(mar_fam_nomar,file = "dbs_mkd_taxa_fam_nomarine.csv", sep = ",", row.names = FALSE, quote = FALSE)
-
-#NAs removal control
+#To check if NAs are removed
 nomar_fam <- nomar_fam[-(which(is.na(nomar_fam)))]
 
-##############
-##### Run this part and add from new lists as it is time-convenient. These one-two lists is assessed with taxa from 1970to79
+#III. Run this part and add from new lists as it is time-convenient. These one-two lists are assessed with taxa from 1970to79
 
 #Adding and removing families that are marine and present in non-marine list and
   #families that are non-marine and are present in marine list
@@ -147,7 +114,7 @@ colnames(one) <- c("species")
 one <- one$species
 #Question marks, confirmed in artsdatabanken
 two <- c("Sistotremataceae", "Naetrocymbaceae", "Mycocaliciaceae", "Dacampiaceae", "Lirellidae")
-#Marine that turned out to be no marine after confirmation (or non-valid taxa). For further revision, more time is required :)
+#Marine that turned out to be no marine after confirmation (or non-valid taxa). It could have further revision.
 plus_nomarine <- c("Esocidae", "Clausiliidae", "Physetocarididae")
 
 #merging the new marine and removing from the nomarine list
@@ -166,14 +133,7 @@ for (i in nomar_fam){
   dbs_mkd_taxa <- dbs_mkd_taxa %>% filter(family != i)
 }
 
-#to keep the number
-dbs_mkd_taxa_wormsnmanual <- dbs_mkd_taxa
-
-################### #Adding...
-
-#######################
-###Removing the species within the families that are non-marine
-#!!! dbs_mkd_taxa if following the order of the script, dbs_mkd_taxa_new if the next script has been executed before
+#IV. Removing the species within the families that are non-marine
 species_db <- unique(dbs_mkd_taxa$scientificName)
 species_worms <- unique(worms$scientificName)
 
@@ -185,7 +145,6 @@ max_log <- c()
 for(i in species_db){
   max_log[i] <- length(unique(species_worms == i))
 }
-
 max(max_log)
 
 #Remove NAs
@@ -198,7 +157,7 @@ if(length(which(max_log == 1))>0) {
 }
 length(species_db)
 
-#Repeat without NA
+#Repeat without NAs present
 
 rm(i)
 max_log <- c()
@@ -211,14 +170,6 @@ unique(max_log)
 
 vector2false <- which(max_log == 2) #non-marine
 vector3true <- which(max_log == 3) #marine
-
-#Verification for Fringilla
-#which(names(vector2false) =="Fringillidae")
-#which(names(vector3true) =="Fringillidae")
-#which(families_db =="Fringillidae")
-#which(dbs_mkd_taxa$scientificName == "Fringilla montifringilla")
-#write.csv(vector3true, file = "marine_worms_toverify.txt")
-#vector3true[5]
 
 log_spp <- c()
 n <- 1
@@ -242,11 +193,10 @@ length(log_spp[log_spp == FALSE]) # Number of non-marine
 
 
 log_spp_nomar <- log_spp == FALSE
-mar_spp <- species_db[log_spp] #compare with all list 
-nomar_spp <- species_db[log_spp_nomar] #difference
+mar_spp <- species_db[log_spp] #subsample the marine families
+nomar_spp <- species_db[log_spp_nomar] #subsample the non-marine families
 
-###
-#Run comparing to the current database
+#V. Run comparing to the current database
 
 rm(i)
 
@@ -255,14 +205,11 @@ for (i in nomar_spp){
 }
 
 length(unique(dbs_mkd_taxa$class))
-
-###End adding
-
 rm(i,n)
 
 ##################
 
-#To obtain the species abundance later, the species count that is NA is taken as 1 and added together afterwards for the same species.
+#This part is getting the dataset ready to obtain the species abundance later, the species count that is NA is taken as 1 (one record) and added together afterwards within the same species.
 
 dbs_mkd_taxa$individualCount[is.na(dbs_mkd_taxa$individualCount)] <- 1
 dbs_mkd_taxa$individualCount[dbs_mkd_taxa$individualCount < 0] <- (dbs_mkd_taxa$individualCount[dbs_mkd_taxa$individualCount < 0])*-1 
