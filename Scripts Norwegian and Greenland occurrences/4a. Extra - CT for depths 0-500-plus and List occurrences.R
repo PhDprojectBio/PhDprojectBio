@@ -13,6 +13,12 @@ library(ggplot2)
 library(wdpar)
 library(vegan)
 
+#This script is going to work with the overall of records
+#Import all the dbs_mkd_taxa_new records and add a suffix for each one (e.g. dbs_mkd_taxa_new1900_49)
+
+I. 
+
+
 
 #Getting the records of all the species in the corresponding time window
 
