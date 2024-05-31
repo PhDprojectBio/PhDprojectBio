@@ -54,51 +54,6 @@ for (i in 1:length(namesShallowDeep)){
 
 
 
-
-
-
-##For keeping running
-#setwd("//home.ansatt.ntnu.no/lcgarcia/Documents/R")
-#load("~/R/2020_23a.RData")
-#...
-#rm(databases,databases_mkd)
-#save.image("//home.ansatt.ntnu.no/lcgarcia/Documents/R/2020_23b.RData")
-
-#rm(list = ls())
-
-
-#names of species for latitude 84
-aux <- convtable_0_500_sp_nodups[29,]
-aux2 <- which (aux > 0)
-aux3 <- aux[aux2]
-colnames(aux3)
-
-
-#mn <- 0
-#mx <- 500
-
-#for(i in 1:12){
-
-#shp <- st_as_sf(x = get(gsub(" ","", paste("mkd_",mn,"_",mx))),                         
- #               coords = c("XCoord", "YCoord"),
-  #              crs = 4326)
-
-#st_write(shp, gsub(" ","", paste("mkd_",mn,"_",mx,".shp")))
-
-#mn = mn + 500
-#mx = mx + 500
-
-#}
-
-#shp <- st_as_sf(x = polygon,                         
- #               coords = c("XCoord", "YCoord"),
-  #              crs = 4326)
-
-#st_write(shp, "polygon.shp")
-
-#rm(i)
-
-
 sp_list_class_dom <- sp_list2 %>% arrange(class) %>% group_by(class) %>% mutate(maximum = max(abundance)) %>% filter(abundance == maximum)
 dom_sp_class <- sp_list_class_dom$scientificName
 sp_list_class_dom2 <- dbs_mkd_taxa_new %>% arrange(class) %>% group_by(class) %>% subset(scientificName %in% dom_sp_class)
