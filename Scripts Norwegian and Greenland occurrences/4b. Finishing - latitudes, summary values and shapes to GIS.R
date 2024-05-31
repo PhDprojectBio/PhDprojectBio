@@ -45,6 +45,9 @@ for (i in 1:length(namesShallowDeep)){
   s_richness_ts[i] <- s_richness
 }
 
+##################### Here divide thisones to have the shallow and deeps over the overall!!! :)
+
+
 #V. Removing duplicates + splitting in latitudes (if the input is a period of the time-series and the output is no-duplicates per latitudinal band for this period)
 
 # All records (with landshape records masked out before)
