@@ -1,4 +1,5 @@
-setwd("//home.ansatt.ntnu.no/lcgarcia/Documents/R")
+#loading libraries and directory
+setwd("//myDirectory/myFolder/myDocuments/R")
 
 library(janitor)
 library(tibble)
