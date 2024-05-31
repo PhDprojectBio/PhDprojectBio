@@ -13,11 +13,11 @@ library(ggplot2)
 library(wdpar)
 library(readxl)
 
-# Records that do not have recorded depth from those that have recorded depth 
+#I. Split records that do not have recorded depth from those that have recorded depth 
 nodepth_mkd <- dbs_mkd_taxa %>% filter(is.na(depth)) 
 depth_mkd <- anti_join(dbs_mkd_taxa, nodepth_mkd) #records with depth (excluding the ones with no depth)
 
-#Retrieving depths for records that do not have depth 
+#II. Retrieving depths for records that do not have depth 
 
 mn <- 0
 mx <- 500
@@ -26,12 +26,12 @@ while (mn < 6000){
   
   x <- st_read(as.character(gsub(" ","",paste("contour",mn,"_",mx,".shp"))))
   
-  #For b1900 only
+  #For 1876_99 only. Records with no recorded coordinates need to be excluded in this step.
   nodepth_mkd_noNA <- nodepth_mkd %>% filter(!is.na(nodepth_mkd$XCoord) | !is.na(nodepth_mkd$YCoord))
   nodepth_mkd_NA <- nodepth_mkd %>% filter(is.na(nodepth_mkd$XCoord) | is.na(nodepth_mkd$YCoord))
   nodepth_mkd_NA$geometry <- NA 
   
-  y <- st_as_sf(x = nodepth_mkd_noNA,      #For all except b1900: nodepth_mkd                   
+  y <- st_as_sf(x = nodepth_mkd_noNA,      #For all except 1876_99: nodepth_mkd                   
                coords = c("XCoord", "YCoord"),
                crs = 4326)
       
@@ -44,7 +44,7 @@ while (mn < 6000){
       
   mkd <- as.data.frame(mkd)
   
-  #For b1900 only
+  #For 1876_99 only
   mkd <- rbind(mkd, nodepth_mkd_NA)
   names_nodepth_mkd_NA <- names(nodepth_mkd_NA)
   mkd <- mkd[, names_nodepth_mkd_NA]
@@ -66,7 +66,7 @@ while (mn < 6000){
 #get the set that probably correspond to the polygon and graphically represent the result to confirm it and join to the corresponding depth (0to500)
 polygon <- anti_join(nodepth_mkd,mkd_allcont)
 
-#For b1900 only
+#For 1876_99 only
 polygon <- anti_join(nodepth_mkd_noNA,mkd_allcont)
 
 x <- st_read("all_landshape.shp")
@@ -95,11 +95,11 @@ while (mn < 6000){
   
   if (nrow(adddepth) > 0){
     adddepth$depth <- mn+1
-    adddepth$depthAccuracy <- 999999
+    adddepth$depthAccuracy <- 999999   #To identify records with missing depthAccuracy
     assign(gsub(" ","",paste("mkd_",mn,"_",mx)),adddepth)
   }
   
-  #creating a new nodepth records with new established depths
+  #Creating a new nodepth records with new established depths
   
   if (mn == 0){
     nodepth_mkd_new <- adddepth
@@ -113,6 +113,8 @@ while (mn < 6000){
   mx <- mx + 500
 }
 
-#joining record with retrieved depths with those that already had depths recorded
+#III. Joining record with retrieved depths with those that had depths recorded already.
 
 dbs_mkd_taxa_newdepths <- rbind(depth_mkd,nodepth_mkd_new)
+
+###End of the script
