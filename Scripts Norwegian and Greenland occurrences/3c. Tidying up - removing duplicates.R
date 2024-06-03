@@ -14,8 +14,6 @@ library(wdpar)
 
 #I. Finding duplicates in the database without splitting it first in latitudinal bands (if coming from all the periods from the time-series)
 
-dbs_mkd_taxa_new = dbs_mkd_taxa_newdepths %>% filter(taxonRank == "FORM" | taxonRank == "Species" | taxonRank == "SPECIES" | taxonRank == "SUBSPECIES" | taxonRank == "UNRANKED" | taxonRank == "VARIETY" | is.na(taxonRank))
-
 a <- 1
 e <- 1
 f <- 1
@@ -110,8 +108,6 @@ rm(all)
 rm(i,a,e,f,k,h,l,m,p)
 
 #II. To only remove the duplicates for only one period
-
-dbs_mkd_taxa_new = dbs_mkd_taxa_newdepths %>% filter(taxonRank == "FORM" | taxonRank == "Species" | taxonRank == "SPECIES" | taxonRank == "SUBSPECIES" | taxonRank == "UNRANKED" | taxonRank == "VARIETY" | is.na(taxonRank))
 
 a <- 1
 e <- 1
