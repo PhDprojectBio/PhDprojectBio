@@ -16,6 +16,8 @@ library(readxl)
 
 #IV. Calculate the summaries for the time-series
 
+names namesShallowDeepPlot[b],"_nodups"
+
 #Overall counts
 for (i in 1:length(names)){
   if (i == 1){
