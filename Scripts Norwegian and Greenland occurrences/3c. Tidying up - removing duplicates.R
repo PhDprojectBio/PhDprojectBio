@@ -179,17 +179,5 @@ if (nrow(link) > 0){
 rm(all)
 rm(i,a,e,f,k,h,l,m,p)
 
-#III. Creating the permanent dataset and depth intervals for before the 1900s.
-
-dbs_mkd_taxa_new1876_99 <- dbs_mkd_taxa_new
-
-#dividing in 0-500 and 500+ (can be run for every period, if changing the input)
-
-dbs_mkd_taxa_new1876_99_shallow <- dbs_mkd_taxa_new1876_99 %>% filter(depth<500)
-dbs_mkd_taxa_new1876_99_deep <- dbs_mkd_taxa_new1876_99 %>% filter(depth>=500)
-
-namesShallow <- c("dbs_mkd_taxa_new1876_99_shallow", namesShallow)
-namesDeep <- c("dbs_mkd_taxa_new1876_99_deep", namesDeep)
-namesShallowDeep <- c(namesShallow,namesDeep)
 
 ###End of the script
