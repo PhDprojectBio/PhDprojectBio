@@ -1,3 +1,17 @@
+#loading libraries and directory
+setwd("//myDirectory/myFolder/myDocuments/R")
+
+library(janitor)
+library(tibble)
+library(stringr)
+library(dplyr)
+library(data.table)
+library(sf)
+library(s2)
+library(stars)
+library(ggplot2)
+library(wdpar)
+
 
 ###########################
 #IV. Removing duplicates + splitting in latitudes (if the input is a period of the time-series and the output is no-duplicates per latitudinal band for this period)
@@ -207,20 +221,6 @@ counter <- counter + 1
 
 
 
-
-#loading libraries and directory
-setwd("//myDirectory/myFolder/myDocuments/R")
-
-library(janitor)
-library(tibble)
-library(stringr)
-library(dplyr)
-library(data.table)
-library(sf)
-library(s2)
-library(stars)
-library(ggplot2)
-library(wdpar)
 
 #I. Finding duplicates in the database without splitting it first in latitudinal bands (if coming from all the periods from the time-series)
 
