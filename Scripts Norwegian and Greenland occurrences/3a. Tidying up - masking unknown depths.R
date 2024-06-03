@@ -115,6 +115,6 @@ while (mn < 6000){
 
 #III. Joining record with retrieved depths with those that had depths recorded already.
 
-dbs_mkd_taxa_newdepths <- rbind(depth_mkd,nodepth_mkd_new)
+dbs_mkd_taxa_new <- rbind(depth_mkd,nodepth_mkd_new)
 
 ###End of the script
