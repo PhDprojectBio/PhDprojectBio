@@ -15,22 +15,32 @@ library(wdpar)
 library(readxl)
 
 #IV. Calculate the summaries for the time-series
+#These are the keeping objects for the following steps
 
-names namesShallowDeepPlot[b],"_nodups"
+namesShallowNodups <- gsub("shallow_diffmatch", "shallow_diffmatch_nodups", namesShallowPlot)
+namesDeepNodups <- gsub("deep_diffmatch", "deep_diffmatch_nodups", namesDeepPlot)
+namesShallowDeepNodups <- c(namesShallowNodups,namesDeepNodups)
 
+singlecounts <- c()
 #Overall counts
-for (i in 1:length(names)){
+for (i in 1:length(namesShallowDeepNodups)){
   if (i == 1){
-    counts <- nrow(get(names[i]))
+    counts <- nrow(get(namesShallowDeepNodups[i]))
+    singlecount <- counts
   }
-  else{
-    counts <- counts + nrow(get(names[i]))
+  if (i > 1){
+    counts <- counts + nrow(get(namesShallowDeepNodups[i]))
+    singlecount <- nrow(get(namesShallowDeepNodups[i]))
   }
+  
+  singlecounts[i] <- singlecount
 }
 counts
 rm(i)
 
-#Getting the abundances and species richness per time period
+ratiosoverall <- singlecounts/counts
+
+#Getting the species richness, abundances and occurrences per time period
 
 abundances_ts <- c()
 s_richness_ts <- c()
@@ -50,9 +60,6 @@ for (i in 1:length(namesShallowDeep)){
   occurrences_ts[i] <- occurrences
 }
 
-##################### Here divide this zones to have the shallow and deeps over the overall!!! :)
-
-
 #V. Converting to shapes, an example
   
   shp <- st_as_sf(x = dataset,                         
@@ -60,7 +67,5 @@ for (i in 1:length(namesShallowDeep)){
                   crs = 4326)
   
   st_write(shp, gsub(" ","", paste("shp_",name,".shp")))
-}
-rm(i)
 
 ###End of the script
