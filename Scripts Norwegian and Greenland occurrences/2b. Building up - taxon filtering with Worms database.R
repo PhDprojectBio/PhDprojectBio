@@ -18,7 +18,7 @@ library(readxl)
 #I. Masking the groups that would not correspond to the marine environment (depending on the scope of the study)
 
 #Filter to the species level
-dbs_mkd_taxa_new = dbs_mkd_taxa %>% filter(taxonRank == "FORM" | taxonRank == "Species" | taxonRank == "SPECIES" | taxonRank == "SUBSPECIES" | taxonRank == "UNRANKED" | taxonRank == "VARIETY" | is.na(taxonRank))
+dbs_mkd_taxa = dbs_mkd_taxa %>% filter(taxonRank == "FORM" | taxonRank == "Species" | taxonRank == "SPECIES" | taxonRank == "SUBSPECIES" | taxonRank == "UNRANKED" | taxonRank == "VARIETY" | is.na(taxonRank))
 
 #Then excluding some taxa
 unique(databases_mkd$kingdom)
