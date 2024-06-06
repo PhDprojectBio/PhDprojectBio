@@ -139,7 +139,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 class(world)
 
 #There are records that register depths in a different contour than they are supposed to be. Here we mask by contour first, tehn they can be plotted (applying the masking correction that comes in the block below first.
-#This is based on the content of the script 3a.
+#This is based on the content of the script 3a. This is for register of the min and max contours. Consider merging with the last script.
 
 rm(i,x,a)
 for (i in 1:length(namesShallowDeep)){
