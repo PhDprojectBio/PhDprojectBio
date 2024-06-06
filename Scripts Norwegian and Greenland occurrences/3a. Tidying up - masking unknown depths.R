@@ -95,7 +95,7 @@ while (mn < 6000){
   
   if (nrow(adddepth) > 0){
     adddepth$depth <- mn+1
-    adddepth$depthAccuracy <- 999999   #To identify records with missing depthAccuracy
+    adddepth$depthAccuracy <- 0.999999   #To identify records with missing depthAccuracy
     assign(gsub(" ","",paste("mkd_",mn,"_",mx)),adddepth)
   }
   
