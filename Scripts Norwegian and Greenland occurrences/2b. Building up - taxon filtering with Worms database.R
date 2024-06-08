@@ -39,7 +39,7 @@ for (i in exc_class){
 taxon <- read.delim("~/R/taxon.txt") %>% filter(taxonomicStatus == "accepted")
 speciesprofile <- read.delim("~/R/speciesprofile.txt")
 unique(taxon$taxonRank) #verify that the taxonomic level corresponds to species.
-worms <- right_join(taxon[,c(1,6,11:20,30)], speciesprofile %>% filter(isMarine == 1), by = "taxonID")
+worms <- right_join(taxon[,c(1,6:8,11:20,30)], speciesprofile %>% filter(isMarine == 1), by = "taxonID")
 unique(dbs_mkd_taxa$kingdom)
 unique(dbs_mkd_taxa$class)
 families_db <- unique(dbs_mkd_taxa$family)
@@ -139,7 +139,7 @@ for (i in nomar_fam){
 
 #IV. Removing the species within the families that are non-marine
 species_db <- unique(dbs_mkd_taxa$scientificName)
-species_worms <- unique(worms$scientificName)
+species_worms <- c(unique(worms$scientificName), unique(worms$acceptedNameUsage), unique(worms$parentNameUsage))
 
 n <- 1
 rm(i)
