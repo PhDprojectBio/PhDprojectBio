@@ -294,5 +294,93 @@ obisb_2015to19 = obisb_2015to19[c("coordinateUncertaintyInMeters", "class", "dat
 obisb_2020to23 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))", startdate = as.Date("2020-01-01"), enddate = as.Date("2023-12-31"), absence = NULL, flags = NULL)
 obisb_2020to23 = obisb_2020to23[c("coordinateUncertaintyInMeters", "class", "datasetName", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "eventID", "family", "id", "individualCount", "flags", "kingdom", "month", "scientificName", "taxonRank", "year")]
 
-#Every time slot can be saves as a separate archive to process with the following scripts.
+##Request from EMODnet
+
+# load dependencies
+## geospatial data handling
+library(rgdal)
+library(raster)
+library(sp)
+library(mapdata)
+library(ncdf4)
+library(XML)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(downloader)
+library(directlabels)
+library(rasterVis)
+library(ggplot2)
+library(knitr)
+library(IRdisplay)
+library(repr)
+
+remotes::install_github("EMODnet/EMODnetWFS")
+library("EMODnetWFS")
+#View(emodnet_wfs())
+wfs_bio <- emodnet_init_wfs_client(service = "biology_occurrence_data")
+info <- emodnet_get_wfs_info(wfs_bio)
+
+xmin= -27
+ymin= 56
+xmax= 38
+ymax= 85
+layer <- emodnet_get_layers(
+  service = "biology_occurrence_data",
+  layers = c("eurobis-obisenv"), 
+  BBOX = paste(xmin,ymin,xmax,ymax,sep=",")
+)
+
+layer <- layer[["eurobis-obisenv"]]
+
+#Formatting EMODnet accordingly to GBIF+OBIS fields
+
+names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)
+names(layer)
+
+### Apply the filters
+
+#layerbu <- layer
+#layer <- layerbu
+layer <- layer[,c(35,50,4,66,16,37,38,79,52,2,68,57,48,13,40,43,10,123,29,32)]
+names(layer)
+
+layer <- as.data.frame(layer)
+
+names(layer)[1] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[1] #"coordinateuncertaintyinmeters" to "coordinateUncertaintyInMeters"
+names(layer)[3] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[3] #"datasetid" to "dataset" 
+names(layer)[4] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[4] #"dayidentified" to "dateIdentified"
+names(layer)[5] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[5] #"daycollected" to "day"
+#to calculate a (mean) value for the depth
+layer$depth <- (layer$minimumdepthinmeters + layer$maximumdepthinmeters)/2
+#remove one of the columns for depth
+layer <- layer[-7]
+layer[6] <- layer[20]
+layer <- layer[-20]
+names(layer)
+names(layer)[6] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[6] #"minimumdepthinmeters"and "maximumdepthinmeters" to "depth" (mean)
+names(layer)[7] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[7] #"depthrange" to "depthAccuracy"
+names(layer)[10] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[10] #"samplingeffort" to "individualCount"
+names(layer)[11] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[11] #"occurrenceremarks" to "flags"
+names(layer)[13] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[13] #"monthcollected" to "month"
+names(layer)[14] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[14] #"scientificname" to "scientificName"
+names(layer)[15] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[15] #"taxonrank" to "taxonRank"
+names(layer)[16] <- names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)[16] #"yearcollected" to "year"
+names(layer)
+names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)
+layer$database <- "emodnet"
+layer <- layer[-17]
+names(layer)
+layer$XCoord <- layer$decimallatitude
+layer$YCoord <- layer$decimallongitude
+layer$decimalLatitude <- layer$YCoord
+layer$decimalLongitude <- layer$XCoord
+layer <- layer[-17]
+layer <- layer[-17]
+names(layer)
+
+databases <- layer
+
+
+#Every time slot can be saved as a separate archive to process with the following scripts.
 ###End of the script
