@@ -160,7 +160,7 @@ gbif_2020to23 <- occ_download(
   pred("occurrenceStatus","PRESENT"), 
   pred_not(pred_in("basisOfRecord",c("FOSSIL_SPECIMEN","LIVING_SPECIMEN"))),
   pred_within("POLYGON((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))"),
-  pred_and(pred_gte("year", 2020), pred_lte("year", 2023)),
+  pred_and(pred_gte("year", 2020)),
   format = "SIMPLE_CSV"
 )
 
@@ -291,7 +291,7 @@ obisb_2015to19 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000
 obisb_2015to19 = obisb_2015to19[c("coordinateUncertaintyInMeters", "class", "datasetName", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "eventID", "family", "id", "individualCount", "flags", "kingdom", "month", "scientificName", "taxonRank", "year")]
 
 #obis_2020to23
-obisb_2020to23 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))", startdate = as.Date("2020-01-01"), enddate = as.Date("2023-12-31"), absence = NULL, flags = NULL)
+obisb_2020to23 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))", startdate = as.Date("2020-01-01"), absence = NULL, flags = NULL)
 obisb_2020to23 = obisb_2020to23[c("coordinateUncertaintyInMeters", "class", "datasetName", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "eventID", "family", "id", "individualCount", "flags", "kingdom", "month", "scientificName", "taxonRank", "year")]
 
 ##Request from EMODnet
