@@ -153,8 +153,8 @@ gbif_2015to19 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#between 2020 and 2023
-gbif_2020to23 <- occ_download(
+#between 2020 and 2024
+gbif_2020to24 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
   pred("occurrenceStatus","PRESENT"), 
@@ -216,9 +216,9 @@ gbifa_2010to14 <- occ_download_get(head(gbif_2010to14)) %>% occ_download_import(
 occ_download_wait(head(gbif_2015to19))
 gbifa_2015to19 <- occ_download_get(head(gbif_2015to19)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#i.e. > gbif_2020to23
-occ_download_wait(head(gbif_2020to23))
-gbifa_2020to23 <- occ_download_get(head(gbif_2020to23)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
+#i.e. > gbif_2020to24
+occ_download_wait(head(gbif_2020to24))
+gbifa_2020to24 <- occ_download_get(head(gbif_2020to24)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
 # Step 3: Select the fields that you need to work with.
 
@@ -236,7 +236,7 @@ gbifa_2005to09 = gbifa_2005to09[c("coordinateUncertaintyInMeters", "class", "dat
 
 gbifa_2010to14 = gbifa_2010to14[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
 gbifa_2015to19 = gbifa_2015to19[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
-gbifa_2020to23 = gbifa_2020to23[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
+gbifa_2020to24 = gbifa_2020to24[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
 
 
 # II. For OBIS, analogue procedure as with GBIF
