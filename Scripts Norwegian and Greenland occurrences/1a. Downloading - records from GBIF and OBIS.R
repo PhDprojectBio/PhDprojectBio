@@ -160,7 +160,7 @@ gbif_2020to24 <- occ_download(
   pred("occurrenceStatus","PRESENT"), 
   pred_not(pred_in("basisOfRecord",c("FOSSIL_SPECIMEN","LIVING_SPECIMEN"))),
   pred_within("POLYGON((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))"),
-  pred_and(pred_gte("year", 2020)),
+  pred_gte("year", 2020),
   format = "SIMPLE_CSV"
 )
 
