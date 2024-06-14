@@ -1,4 +1,4 @@
-#Loading libraries and directory.
+#I. Loading libraries and directory.
 setwd("//myDirectory/myFolder/myDocuments/R")
 
 library(janitor)
@@ -13,7 +13,7 @@ library(ggplot2)
 library(wdpar)
 library(readxl)
 
-#I. Building the vector with the objects to be processed.
+#II. Building the vector with the objects to be processed.
 
 set24 <- ls()
 set24
@@ -22,7 +22,7 @@ set24
 set24 <- set24[13:24]
 set24 
 
-#II. Masking the landshape out of databases.                          
+#III. Masking the landshape out of databases.                          
 
 library("ggplot2")
 theme_set(theme_bw())
