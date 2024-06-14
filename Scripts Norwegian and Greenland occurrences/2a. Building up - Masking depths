@@ -1,4 +1,4 @@
-#loading libraries and directory
+#Loading libraries and directory.
 setwd("//myDirectory/myFolder/myDocuments/R")
 
 library(janitor)
