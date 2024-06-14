@@ -96,3 +96,5 @@ nor_exp[20] <- nor_exp[c("XCoord")]
 nor_exp[21] <- nor_exp[c("YCoord")]
 colnames(nor_exp)[20] <- "XCoordGeom"
 colnames(nor_exp)[21] <- "YCoordGeom"
+
+#End of the script
