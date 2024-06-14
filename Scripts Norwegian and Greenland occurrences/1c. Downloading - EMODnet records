@@ -1,7 +1,6 @@
-##Request from EMODnet
+# I. Setting directory and charging libraries and install packages if necessary.
+setwd("//myDirectory/myFolder/myDocuments/R")
 
-# load dependencies
-## geospatial data handling
 library(rgdal)
 library(raster)
 library(sp)
@@ -19,9 +18,10 @@ library(knitr)
 library(IRdisplay)
 library(repr)
 
+# II. Requesting the information.
 remotes::install_github("EMODnet/EMODnetWFS")
 library("EMODnetWFS")
-#View(emodnet_wfs())
+View(emodnet_wfs())
 wfs_bio <- emodnet_init_wfs_client(service = "biology_occurrence_data")
 info <- emodnet_get_wfs_info(wfs_bio)
 
@@ -29,6 +29,7 @@ xmin= -27
 ymin= 56
 xmax= 38
 ymax= 85
+
 layer <- emodnet_get_layers(
   service = "biology_occurrence_data",
   layers = c("eurobis-obisenv"), 
@@ -37,15 +38,11 @@ layer <- emodnet_get_layers(
 
 layer <- layer[["eurobis-obisenv"]]
 
-#Formatting EMODnet accordingly to GBIF+OBIS fields
+# III. Formatting EMODnet accordingly to GBIF+OBIS datafields.
 
 names(dbs_mkd_taxa_new1900_49_deep_diffmatch_nodups)
 names(layer)
 
-### Apply the filters
-
-#layerbu <- layer
-#layer <- layerbu
 layer <- layer[,c(35,50,4,66,16,37,38,79,52,2,68,57,48,13,40,43,10,123,29,32)]
 names(layer)
 
@@ -83,8 +80,7 @@ layer <- layer[-17]
 layer <- layer[-17]
 names(layer)
 
-databases <- layer
+allemodnet <- layer
 
 
-#Every time slot can be saved as a separate archive to process with the following scripts.
 ###End of the script
