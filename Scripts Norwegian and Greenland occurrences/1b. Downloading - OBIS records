@@ -1,4 +1,4 @@
-# I. Setting directory and charging libraries and install packages if necessary
+# I. Setting directory and charging libraries and install packages if necessary.
 setwd("//myDirectory/myFolder/myDocuments/R")
 
 library(janitor)
@@ -15,7 +15,7 @@ library(readxl)
 library(dismo)
 library(robis)
 
-# II. Requesting records and importing them to R
+# II. Requesting records and importing them to R.
 
 #1. obis_1876to99
 obisb_1876to99 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000, -27.000 56.000, 38.000 56.000, 38.000 85.000))", enddate = as.Date("1899-12-31"), absence = NULL, flags = NULL)
@@ -66,4 +66,4 @@ obisb_2020to23 <- occurrence(geometry = "POLYGON ((38.000 85.000, -27.000 85.000
 obisb_2020to23 = obisb_2020to23[c("coordinateUncertaintyInMeters", "class", "datasetName", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "eventID", "family", "id", "individualCount", "flags", "kingdom", "month", "scientificName", "taxonRank", "year")]
 
 
-#End of the script
+#End of the script.
