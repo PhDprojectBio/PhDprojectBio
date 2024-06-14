@@ -1,4 +1,4 @@
-#loading libraries and directory
+# I. Setting directory and charging libraries and install packages if necessary
 setwd("//myDirectory/myFolder/myDocuments/R")
 
 library(janitor)
@@ -13,7 +13,6 @@ library(ggplot2)
 library(wdpar)
 library(readxl)
 
-#Steps to download records from GBIF and OBIS.
 #I. For GBIF
 #Set Up Your GBIF Username and Password
 
