@@ -1,6 +1,24 @@
-###III. Including the Norwegian expedition
+# I. Setting directory and charging libraries and install packages if necessary.
+setwd("//myDirectory/myFolder/myDocuments/R")
 
-#Run this with the R assistant if there is any trouble
+library(rgdal)
+library(raster)
+library(sp)
+library(mapdata)
+library(ncdf4)
+library(XML)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(downloader)
+library(directlabels)
+library(rasterVis)
+library(ggplot2)
+library(knitr)
+library(IRdisplay)
+library(repr)
+
+#Import the Excel datasheet if it is necessary.
 norwegian_expedition_database <- read_excel("~/R/norwegian_expedition_database.xlsx", 
                                               +     col_types = c("numeric", "numeric", "text", 
                                                                   +         "text", "text", "text", "text", "numeric", 
@@ -96,5 +114,6 @@ nor_exp[20] <- nor_exp[c("XCoord")]
 nor_exp[21] <- nor_exp[c("YCoord")]
 colnames(nor_exp)[20] <- "XCoordGeom"
 colnames(nor_exp)[21] <- "YCoordGeom"
+
 
 #End of the script
