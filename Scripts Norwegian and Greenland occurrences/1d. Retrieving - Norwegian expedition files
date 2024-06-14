@@ -18,7 +18,9 @@ library(knitr)
 library(IRdisplay)
 library(repr)
 
+# II. Formatting the dataset.
 #Import the Excel datasheet if it is necessary.
+
 norwegian_expedition_database <- read_excel("~/R/norwegian_expedition_database.xlsx", 
                                               +     col_types = c("numeric", "numeric", "text", 
                                                                   +         "text", "text", "text", "text", "numeric", 
