@@ -1,1 +1,52 @@
 
+#I. Building the vector with the objects to be processed.
+
+set24 <- ls()
+set24
+
+#choose the columns in your case. These are an example. Store the number of records per object for using it in next steps.
+set24 <- set24[13:24]
+set24 
+
+#II. Masking the landshape out of databases.                          
+
+library("ggplot2")
+theme_set(theme_bw())
+library("sf")
+
+#install.packages("rnaturalearth")
+library("rnaturalearth")
+#install.packages("rnaturalearthdata")
+library("rnaturalearthdata")
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world2 <- st_crop(world, xmin = -27, ymin = 50, xmax = 38, ymax = 85)
+
+#install.packages("ggspatial")
+library("ggspatial")
+
+set24_mkd <- c()
+for (i in 1:length(set24)){
+
+    x <- world2
+
+    y0 <- get(set24[i])
+    y0$XCoord <- y0$decimalLongitude
+    y0$YCoord <- y0$decimalLatitude
+    assign(gsub(" ","",paste(set24[i])),y0)
+    
+    y <- st_as_sf(x = get(set24[i]),                         
+              coords = c("XCoord", "YCoord"),
+              crs = 4326)
+
+    y_int <- st_intersects(y,x)
+    y_log <- lengths(y_int) == 0 
+    databases_mkd <- y[y_log, ]
+
+    databases_mkd <- as.data.frame(databases_mkd)
+    
+    assign(gsub(" ","",paste(set24[i], "_mkd")),databases_mkd)
+    set24_mkd[i] <- gsub(" ","",paste(set24[i], "_mkd"))
+}
+
+
