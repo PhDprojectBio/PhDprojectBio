@@ -1,3 +1,17 @@
+#loading libraries and directory
+setwd("//myDirectory/myFolder/myDocuments/R")
+
+library(janitor)
+library(tibble)
+library(stringr)
+library(dplyr)
+library(data.table)
+library(sf)
+library(s2)
+library(stars)
+library(ggplot2)
+library(wdpar)
+library(readxl)
 
 #I. Building the vector with the objects to be processed.
 
@@ -50,3 +64,4 @@ for (i in 1:length(set24)){
 }
 
 
+#End of the script.
