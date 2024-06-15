@@ -64,4 +64,26 @@ for (i in 1:length(set24)){
 }
 
 
+#Masking for the Norwegian expedition files.
+
+x <- st_read("all_landshape.shp")
+
+#splitting in NA and no NA parts to be able to perform the masking
+nor_exp_noNA <- nor_exp %>% filter(!is.na(nor_exp$XCoord) | !is.na(nor_exp$YCoord))
+nor_exp_NA <- nor_exp %>% filter(is.na(nor_exp$XCoord) | is.na(nor_exp$YCoord))
+nor_exp_NA$geometry <- NA 
+nor_exp_NA <- nor_exp_NA[-c(20,21)]
+
+y <- st_as_sf(x = nor_exp_noNA,                         
+              coords = c("XCoordGeom", "YCoordGeom"),
+              crs = 4326)
+
+y_int <- st_intersects(y,x)
+y_log <- lengths(y_int) == 0 
+databases_mkd_nor <- y[y_log, ]
+databases_mkd_nor <- as.data.frame(databases_mkd_nor)
+databases_mkd_nor <- rbind(databases_mkd_nor, nor_exp_NA)
+colnames(databases_mkd_nor)[7] = "XCoord"
+colnames(databases_mkd_nor)[6] = "YCoord"
+
 #End of the script.
