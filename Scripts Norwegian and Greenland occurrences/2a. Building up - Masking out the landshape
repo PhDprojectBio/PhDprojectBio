@@ -33,6 +33,7 @@ library("rnaturalearth")
 #install.packages("rnaturalearthdata")
 library("rnaturalearthdata")
 
+#Importing world landshape from the contents of https://r-spatial.org/r/2018/10/25/ggplot2-sf.html
 world <- ne_countries(scale = "medium", returnclass = "sf")
 world2 <- st_crop(world, xmin = -27, ymin = 50, xmax = 38, ymax = 85)
 
