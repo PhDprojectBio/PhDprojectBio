@@ -1,0 +1,125 @@
+#III. Importing contours previously designed in ArcGIS. For this, use the Analysis Tools and Overlay Toolboxes, or the Contour tool in the Spatial Analyst Tools.
+###Only running once for working with all the datasets throughout the time series.
+
+#Verifying geometries of contours in R (contours produced in ArcGIS)
+
+x <- st_read("contour0_500.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_repair_geometry(x)
+st_is_valid(x, reason = TRUE)
+
+    #If needed, use this example to remove a polygon which geometry has not been corrected
+    w <- x[147,]
+
+    ggplot() +
+      geom_sf(data = w) +
+      scale_fill_viridis_c()
+    
+    x <- x[-147,]
+    st_is_valid(x, reason = TRUE)
+
+st_write(x, "contour0_500.shp")
+
+##
+x <- st_read("contour500_1000.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_repair_geometry(x)
+st_is_valid(x, reason = TRUE)
+
+st_write(x, "contour500_1000.shp")
+
+##
+x <- st_read("contour1000_1500.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_repair_geometry(x)
+st_is_valid(x, reason = TRUE)
+
+st_write(x, "contour1000_1500.shp")
+
+##
+x <- st_read("contour1500_2000.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_repair_geometry(x)
+st_is_valid(x, reason = TRUE)
+
+st_write(x, "contour1500_2000.shp")
+
+##
+x <- st_read("contour2000_2500.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_repair_geometry(x)
+st_is_valid(x, reason = TRUE)
+
+st_write(x, "contour2000_2500.shp")
+
+##
+x <- st_read("contour2500_3000.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_repair_geometry(x)
+st_is_valid(x, reason = TRUE)
+
+st_write(x, "contour2500_3000.shp")
+
+##
+x <- st_read("contour3000_3500.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_repair_geometry(x)
+st_is_valid(x, reason = TRUE)
+
+st_write(x, "contour3000_3500.shp")
+
+##
+x <- st_read("contour3500_4000.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_repair_geometry(x)
+st_is_valid(x, reason = TRUE)
+
+st_write(x, "contour3500_4000.shp")
+
+##
+
+#Use this if the contour needs an additional correction in ArcGIS (i.e. vertex went out of boundaries, then exporting and importing again). 
+  x <- st_read("contour4000_4500.shp")
+  st_is_valid(x, reason = TRUE)
+  x <- st_repair_geometry(x)
+  st_is_valid(x, reason = TRUE)
+  
+  st_write(x, "contour4000_4500.shp")
+  
+  ##
+  x <- st_read("contour4500_5000.shp")
+  st_is_valid(x, reason = TRUE)
+  x <- st_repair_geometry(x)
+  st_is_valid(x, reason = TRUE)
+  
+  st_write(x, "contour4500_5000.shp")
+
+##
+x <- st_read("contour5000_5500.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_repair_geometry(x)
+st_is_valid(x, reason = TRUE)
+
+st_write(x, "contour5000_5500.shp")
+
+##
+x <- st_read("contour5500_6000.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_repair_geometry(x)
+st_is_valid(x, reason = TRUE)
+
+st_write(x, "contour5500_6000.shp")
+
+### If there is an isolated polygon. All the nodepth points that are not masked by contours, should coincide with the geometry of this polygon.
+
+x <- st_read("polygon.shp")
+st_is_valid(x, reason = TRUE)
+x <- st_make_valid(x)
+st_is_valid(x, reason = TRUE)
+
+########
+
+# The polygon will be added after the following steps (when masking by depth and latitude, see script 3b).
+
+
+#End of the script.
