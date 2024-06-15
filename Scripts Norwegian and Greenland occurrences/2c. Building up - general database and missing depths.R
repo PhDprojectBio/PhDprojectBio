@@ -176,31 +176,6 @@ st_is_valid(x, reason = TRUE)
 # The polygon will be added after the following steps (when masking by depth and latitude, see script 3b).
 
 
-#Masking out landmases
 
-x <- st_read("all_landshape.shp")
-
-#splitting in NA and no NA parts to be able to perform the masking
-nor_exp_noNA <- nor_exp %>% filter(!is.na(nor_exp$XCoord) | !is.na(nor_exp$YCoord))
-nor_exp_NA <- nor_exp %>% filter(is.na(nor_exp$XCoord) | is.na(nor_exp$YCoord))
-nor_exp_NA$geometry <- NA 
-nor_exp_NA <- nor_exp_NA[-c(20,21)]
-
-y <- st_as_sf(x = nor_exp_noNA,                         
-              coords = c("XCoordGeom", "YCoordGeom"),
-              crs = 4326)
-
-y_int <- st_intersects(y,x)
-y_log <- lengths(y_int) == 0 
-databases_mkd_nor <- y[y_log, ]
-databases_mkd_nor <- as.data.frame(databases_mkd_nor)
-databases_mkd_nor <- rbind(databases_mkd_nor, nor_exp_NA)
-colnames(databases_mkd_nor)[7] = "XCoord"
-colnames(databases_mkd_nor)[6] = "YCoord"
-
-#join to GBIF+OBIS (databases_mkd)
-#load("~/R/1876_1899a.RData")
-databases_mkd = rbind(databases_mkd,databases_mkd_nor)
-#Save this together with 1876_99a.RData, to now include the Norwegian Expedition files.
 
 ###End of the script
