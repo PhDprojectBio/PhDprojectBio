@@ -13,99 +13,6 @@ library(ggplot2)
 library(wdpar)
 library(vegan)
 
-#For retrieving the GBIF keys
-load("~/R/1900_49a.RData")
-load("~/R/1950_59a.RData")
-load("~/R/1960_69a.RData")
-load("~/R/1970_79a.RData")
-load("~/R/1980_89a.RData")
-load("~/R/1990_99a.RData")
-load("~/R/2000_04a.RData")
-load("~/R/2005_09a.RData")
-load("~/R/2010_14a.RData")
-load("~/R/2015_19a.RData")
-load("~/R/2020_23a.RData")
-
-#I. Unifying the time-series in one session of R
-
-#This script is going to work with the overall of records
-#Import all the dbs_mkd_taxa_new records and add a suffix for each one (e.g. dbs_mkd_taxa_new1900_49)
-
-#Assigning the names for the keeping objects per period (e.g. dbs_mkd_taxa_new1900_49)
-names <- c()
-years <- c()
-
-for(i in 1:11){
-  if (i == 1){
-    a <- 1890+(10*i)
-    b <- 39+(10*i)
-    names[i] <- gsub(" ","",paste("dbs_mkd_taxa_new",a,"_",b))
-  }
-  if (i > 1 & i < 7){
-    a <- 1930+(10*i)
-    b <- 39+(10*i)
-    names[i] <- gsub(" ","",paste("dbs_mkd_taxa_new",a,"_",b))
-  }
-  if(i > 6 & i < 9){
-    a <- 1965+(5*i)
-    b <- 69+(5*i)-100
-    names[i] <- gsub(" ","",paste("dbs_mkd_taxa_new",a,"_0",b))
-  }
-  if (i > 8 & i < 11){
-    a <- 1965+(5*i)
-    b <- 69+(5*i)-100
-    names[i] <- gsub(" ","",paste("dbs_mkd_taxa_new",a,"_",b))
-  }
-  if(i == 11){
-    a <- 1965+(5*i)
-    b <- 68+(5*i)-100
-    names[i] <- gsub(" ","",paste("dbs_mkd_taxa_new",a,"_",b))
-  }
-
-  if (i < 7 | i > 8){
-    years[i] <- gsub(" ","",paste(a,"_",b))
-  }
-  
-  if (i > 6 & i < 9){
-    years[i] <- gsub(" ","",paste(a,"_0",b))
-  }
-}
-
-rm(i)
-names
-years
-
-#Build the objects per period calling the names
-
-for(i in 1:11){
-
-  if(i == 1){
-    load(gsub(" ","",paste("~/R/",years[i],"c.RData")))
-    rm(list=ls()[! ls() %in% c("dbs_mkd_taxa_new")])
-    assign(names[i], dbs_mkd_taxa_new)
-  }
-  
-  if(i == 2){ 
-    load(gsub(" ","",paste("~/R/",years[i],"c.RData")))
-    rm(list=ls()[! ls() %in% c(names[i-1],"dbs_mkd_taxa_new")])
-    assign(names[i], dbs_mkd_taxa_new)
-  }
-  
-  if(i > 2){ 
-    load(gsub(" ","",paste("~/R/",years[i],"c.RData")))
-    rm(list=ls()[! ls() %in% c(names[1:i-1],"dbs_mkd_taxa_new")])
-    assign(names[i], dbs_mkd_taxa_new)
-    rm(dbs_mkd_taxa_new)
-  }
-}
-
-rm(i,b)
-
-#Add the period 1876-1899 to the names vector and the R environment:
-
-load("~/R/1876_99a.RData")
-dbs_mkd_taxa_new1876_99 <- dbs_mkd_taxa_new
-names <- c("dbs_mkd_taxa_new1876_99",names)
 
 #II. Getting the two depth intervals (0-500m and 500 and below)
 
@@ -125,7 +32,7 @@ for (i in 1:length(names)){
 } 
 rm(i,shallow,deep)
 
-#III. Last masking correction
+#III. Assigning new fields
 
 library("ggplot2")
 theme_set(theme_bw())
@@ -133,10 +40,6 @@ library("sf")
 library("rnaturalearth")
 library("rnaturalearthdata")
 library("ggspatial")
-
-#Importing world landshape from the contents of https://r-spatial.org/r/2018/10/25/ggplot2-sf.html
-world <- ne_countries(scale = "medium", returnclass = "sf")
-class(world)
 
 #There are records that register depths in a different contour than they are supposed to be. Here we mask by contour first, tehn they can be plotted (applying the masking correction that comes in the block below first.
 #This is based on the content of the script 3a. This is for register of the min and max contours. Consider merging with the last script.
@@ -203,17 +106,6 @@ for (i in 1:length(namesShallowDeep)){
     polygon <- anti_join(as.data.frame(get(namesShallowDeep[i])),as.data.frame(mkd_allcont))
   }
   
-  #x <- st_read("all_landshape.shp")
-  #y <- st_read("contour0_500.shp")
-  #z <- st_as_sf(x = polygon,                         
-  #             coords = c("XCoord", "YCoord"),
-  #            crs = 4326)
-  #ggplot() +
-  # geom_sf(data = x) +
-  # geom_sf(data = y) +
-  # scale_fill_viridis_c() +
-  # geom_sf(data = z) 
-  
   if(nrow(polygon) > 0){
     polygon$minContour <- 0
     polygon$maxContour <- 500
@@ -241,23 +133,7 @@ for (i in 1:length(namesShallowDeep)){
     
     setone <- get(gsub(" ","",paste(namesShallowDeep[i],"_mkd_",mn,"_",mx)))
 
-    #last correction: masking shallow with "world"
-    x <- world2
-    
-    y <- st_as_sf(x = setone,                         
-                  coords = c("XCoord", "YCoord"),
-                  crs = 4326)
-    
-    y_int <- st_intersects(y,x)
-    y_log <- lengths(y_int) == 0 
-    setone_mkd <- y[y_log, ]
-    
-    setone_mkd$XCoord <- st_coordinates(setone_mkd$geometry)[,1]
-    setone_mkd$YCoord <- st_coordinates(setone_mkd$geometry)[,2]
-    
-    setone <- as.data.frame(setone_mkd)
-    
-    #Assigning new fields
+   #Assigning new fields
     
     if(nrow(setone) > 0){
       setone$matchContour <- "pendmatch" #to see if there is any without classification afterwards
