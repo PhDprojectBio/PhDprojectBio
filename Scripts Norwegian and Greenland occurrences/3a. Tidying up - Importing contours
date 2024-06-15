@@ -1,3 +1,18 @@
+#loading libraries and directory
+setwd("//myDirectory/myFolder/myDocuments/R")
+
+library(janitor)
+library(tibble)
+library(stringr)
+library(dplyr)
+library(data.table)
+library(sf)
+library(s2)
+library(stars)
+library(ggplot2)
+library(wdpar)
+library(readxl)
+
 #III. Importing contours previously designed in ArcGIS. For this, use the Analysis Tools and Overlay Toolboxes, or the Contour tool in the Spatial Analyst Tools.
 ###Only running once for working with all the datasets throughout the time series.
 
