@@ -50,25 +50,7 @@ databases$individualCount = as.numeric(databases$individualCount)
 
 databases$scientificName = str_extract(string = databases$scientificName, pattern = "[a-zA-Z]{1,25}\\s{1}[a-z]{2,25}")
 
-#II. Masking the landshape out of databases
 
-x <- st_read("all_landshape.shp")
-
-y <- st_as_sf(x = databases,                         
-              coords = c("XCoord", "YCoord"),
-              crs = 4326)
-
-y_int <- st_intersects(y,x)
-y_log <- lengths(y_int) == 0 
-databases_mkd <- y[y_log, ]
-
-#Correction for day and coordinate's fields names
-
-colnames(databases_mkd)[5] = "day"
-colnames(databases_mkd)[7] = "XCoord"
-colnames(databases_mkd)[6] = "YCoord"
-
-databases_mkd <- as.data.frame(databases_mkd)
 
 #III. Importing contours previously designed in ArcGIS. For this, use the Analysis Tools and Overlay Toolboxes, or the Contour tool in the Spatial Analyst Tools.
 ###Only running once for working with all the datasets throughout the time series.
