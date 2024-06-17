@@ -18,9 +18,11 @@ library(knitr)
 library(IRdisplay)
 library(repr)
 
-#NEW VERSION
+# II. Formatting the dataset.
+#Import the Excel datasheet if it is necessary.
 
-###III. Including the Norwegian expedition
+
+
 
 library(readxl)
 #Run this with the R assistant if there is any trouble
@@ -169,19 +171,7 @@ nexpd_mkd <- databases_mkd_nor
 
 
 
-# II. Formatting the dataset.
-#Import the Excel datasheet if it is necessary.
 
-norwegian_expedition_database <- read_excel("~/R/norwegian_expedition_database.xlsx", 
-                                              +     col_types = c("numeric", "numeric", "text", 
-                                                                  +         "text", "text", "text", "text", "numeric", 
-                                                                  +         "numeric", "text", "text", "text", 
-                                                                  +         "numeric", "numeric", "numeric", 
-                                                                  +         "numeric", "numeric", "numeric", 
-                                                                  +         "numeric", "numeric", "text", "text", 
-                                                                  +         "text", "text"))
-View(norwegian_expedition_database)
-names(norwegian_expedition_database)
 
 #filling the columns that are not present in the records with NAs
   #and the ones with taxonomic details ready to be filled with the Worms database
