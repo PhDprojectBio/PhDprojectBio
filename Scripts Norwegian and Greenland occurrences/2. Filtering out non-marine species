@@ -1,1 +1,2 @@
 #The resulting dataset was masked using the bathymetric contours for the zone built every 500m with ArcGIS. A correction for a missing polygon in the digitalization was included to correctly fit the masking with the bathymetric contours. 
+#WoRMS database records were used to identify marine families and species. An auxiliary file, with some marine groups revised one-by-one, has been uploaded also to GitHub, to be used in the filter. Some groups were excluded from the beginning as occurring in terrestrial settings (see script).
