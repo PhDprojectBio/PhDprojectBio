@@ -539,9 +539,6 @@ save.image("//home.ansatt.ntnu.no/lcgarcia/Documents/R/1876-2024_timeSeriesB.RDa
 
 ###End of the script
 
-#Join
-# Split Every 10yrs
-
 #### Analysis
 
 rm(a,x,i)
@@ -577,6 +574,12 @@ namesNodups[26] <- "nexpd_mkd_allPlanktonBenthos"
 save.image("//home.ansatt.ntnu.no/lcgarcia/Documents/R/1876-2024_timeSeriesB.RData")
 
 
+
+#Join
+# Split Every 10yrs
+
+
+
 #II. Getting the two depth intervals (0-500m and 500 and below)
 
 namesShallow <- c()
@@ -595,5 +598,8 @@ for (i in 1:length(names)){
   namesShallowDeep <- c(namesShallow, namesDeep)
 } 
 rm(i,shallow,deep)
+
+
+
 
 
