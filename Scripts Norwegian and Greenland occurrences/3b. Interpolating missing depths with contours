@@ -183,9 +183,34 @@ for (i in 1:length(names)){
   
   dbs_mkd_taxa_new <- rbind(depth_mkd,nodepth_mkd_new)
   assign(gsub(" ","",paste(names[i],"_extDepths")),nodepth_mkd_new)
-  assign(gsub(" ","",paste(names[i],"_extDepthsbind")),dbs_mkd_taxa_new)
-  
-  ###End of the script
-  
+  assign(gsub(" ","",paste(names[i],"_extDepthsbind")),dbs_mkd_taxa_new)  
   }
 }
+
+rm(x,y,i)
+for(i in 1:length(names)){
+  mn <- 0
+  mx <- 500
+  
+  while (mn < 6000){
+    
+    adddepth <- get(gsub(" ","",paste(names[i],"_mkd_",mn,"_",mx)))
+    
+    if (nrow(adddepth) == 0){
+      assign(gsub(" ","",paste(names[i],"_mkd_",mn,"_",mx,"_adddepth")),adddepth)
+    }
+    
+    mn <- mn + 500
+    mx <- mx + 500
+  }
+}
+
+#These are the keeping objects and the labels for the years
+namesContours <- gsub("worms", "worms_extDepthsbind", names)
+namesContours[25] <- "emodc_mkd_extDepthsbind"
+namesContours[26] <- "nexpd_mkd_extDepthsbind"
+yearsLabels <- c("1876-1899", "1900-1949", "1950-1959", "1960-1969", "1970-1979", "1980-1989", "1990-1999", "2000-2004", "2005-2009", "2010-2014", "2015-2019", "2020-2023")
+
+save.image("//home.ansatt.ntnu.no/lcgarcia/Documents/R/1876-2024_timeSeries.RData")
+
+###End of the script
