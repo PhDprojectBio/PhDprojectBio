@@ -1,0 +1,44 @@
+#### Analysis
+
+rm(a,x,i)
+
+for(i in 1:length(namesNodups)){
+  
+  x <- get(namesNodups[i])
+  
+  for(a in 1:nrow(x)){
+    
+    if (x$value[a] < (x$depth[a] - x$depthAccuracy[a])){
+      x$tiffmatch[a] <- "tiffPlankton"
+    }
+    
+    if(x$value[a] > (x$depth[a] + x$depthAccuracy[a])){
+      x$tiffmatch[a] <- "tiffBelowdepth"
+    }
+    
+    if(x$value[a] < (x$depth[a] + x$depthAccuracy[a]) & x$value[a] > (x$depth[a] - x$depthAccuracy[a])){
+      x$tiffmatch[a] <- "tiffBenthos"
+    }
+  }
+  
+  assign(gsub(" ","",paste(names[i],"_allPlanktonBenthos")), x) 
+  
+}
+
+#These are the keeping objects
+namesNodups <- gsub("worms", "worms_allPlanktonBenthos", names)
+namesNodups[25] <- "emodc_mkd_allPlanktonBenthos"
+namesNodups[26] <- "nexpd_mkd_allPlanktonBenthos"
+
+save.image("//home.ansatt.ntnu.no/lcgarcia/Documents/R/1876-2024_timeSeriesB.RData")
+
+
+
+#Join
+# Split Every 10yrs
+
+
+
+
+
+
