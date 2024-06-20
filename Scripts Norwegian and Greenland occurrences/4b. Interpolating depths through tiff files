@@ -1,3 +1,94 @@
+#########################################################
+#install.packages("raster")
+#filter out obvious planktonic to do tiffs!!!!
+
+#Comparing depths through tiffs 
+summary(tif)
+.rs.unloadPackage("tidyr")
+
+#sf::st_crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+
+rm(i,a,y,y0)
+for(i in 1:length(namesContoursprovinces)){
+  
+  y0 <- get(namesContoursprovinces[i]) %>% filter(XCoord !=0 & YCoord !=0 & depth !=0) %>% filter(matchContour == "probPlanktonShallowset")
+  #y0 <- get() 
+  #y0$XCoord <- y0$decimalLongitude
+  #y0$YCoord <- y0$decimalLatitude
+  #y0 <- y0 %>% filter(XCoord !=0 & YCoord !=0 & depth !=0)
+  #names(y0)[11] <- "id"
+  y <- st_as_sf(x = y0,                         
+                coords = c("XCoord", "YCoord"),
+                crs = "+proj=longlat +datum=WGS84 +ellps=WGS84")
+  
+  y <- as(y, "Spatial")
+  summary(y)
+  
+  for(a in 1:31){
+    data <- data.frame(coordinates(y),
+                       y$id, 
+                       extract(get(gsub(" ","",paste("tif",a))), y))
+    names(data) <- c("x", "y", "id", "value")
+    
+    if(a == 1){
+      rasterfPoints <- data
+    }
+    
+    if(a > 1){
+      rasterfPoints <- rbind(rasterfPoints,data)
+    }
+  }
+  
+  rasterfPoints <- anti_join(rasterfPoints, (rasterfPoints %>% filter(is.na(value))))
+  assign(gsub(" ","",paste(names[i],"_tifRaw")), rasterfPoints)
+}
+
+library(tidyr)
+library(dplyr) 
+
+#rm(x,i)
+#for (i in 1:length(namesContoursprovinces)){
+#  x <- get(namesContoursprovinces[i])
+#  names(x)[11] <- "id"
+#  assign(namesContoursprovinces[i], x)
+#}
+
+rm(x,i)  
+for (i in 1:length(namesContoursprovinces)){
+  x <- left_join((get(namesContoursprovinces[i])), get(gsub(" ","",paste(names[i],"_tifRaw"))), by = "id")
+  assign(gsub(" ","",paste(names[i],"_tiffDepths")), x)
+}
+
+#These are the keeping objects
+namesTiff <- gsub("worms", "worms_tiffDepths", names)
+namesTiff[25] <- "emodc_mkd_tiffDepths"
+namesTiff[26] <- "nexpd_mkd_tiffDepths"
+
+ls4 <- ls()
+ls4 <- ls4[-c(44:50)]
+
+rm(i)
+ls4Length <- c()
+for (i in 1:length(ls4)){
+  ls4Length[i] <- nrow(get(ls4[i]))
+}
+
+#vector1 <- c(namesTiff)
+#save(list=c("data.1", "data.2"), file = "data.Rdata")
+save(list= c(namesTiff, "ls3", "ls3Length", "ls4", "ls4Length"), file = "~/R/1876_2024_tiffs.RData") 
+#save.image("~/R/1876-2024_timeSeriesBU.RData")
+
+###End of the script  
+
+
+
+
+
+
+
+
+
+
 #Comparing depths through tiffs
 summary(tif)
 .rs.unloadPackage("tidyr")
