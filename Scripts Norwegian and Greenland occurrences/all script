@@ -10,72 +10,7 @@
 
 
 
-#### Analysis 
 
-rm(a,x,i)
-for(i in 1:length(namesTiff)){
-  
-  x <- get(namesTiff[i])
-  
-  for(a in 1:nrow(x)){
-    
-    if(!is.na(x$value[a]) & !is.na(x$depthAccuracy[a])){
-    
-      if (x$value[a] < (x$depth[a] - x$depthAccuracy[a])){
-        x$tiffmatch[a] <- "tiffPlankton"
-      }
-      
-      if(x$value[a] > (x$depth[a] + x$depthAccuracy[a])){
-        x$tiffmatch[a] <- "tiffBelowdepth"
-      }
-      
-      if(x$value[a] < (x$depth[a] + x$depthAccuracy[a]) & x$value[a] > (x$depth[a] - x$depthAccuracy[a])){
-        x$tiffmatch[a] <- "tiffBenthos"
-      }
-    }
-    
-    if(!is.na(x$value[a]) & is.na(x$depthAccuracy[a])){
-      
-      if (x$value[a] < x$depth[a]){
-        x$tiffmatch[a] <- "tiffPlankton"
-      }
-      
-      if(x$value[a] > x$depth[a]){
-        x$tiffmatch[a] <- "tiffBelowdepth"
-      }
-      
-      if(x$value[a] == x$depth[a]){
-        x$tiffmatch[a] <- "tiffBenthos"
-      }
-    }
-    
-    if(is.na(x$value[a] & x$matchContour[a] != "probPlanktonShallowset")){
-      x$tiffmatch[a] <- "toArcGIS"
-    }
-    
-    if (x$matchContour[a] == "probPlanktonShallowset"){
-      x$tiffmatch[a] <- "contourPlankton"
-    }
-  }
-  
-  assign(gsub(" ","",paste(names[i],"_allPlanktonBenthos")), x) 
-}
-
-save(list= c(namesTiff, "ls3", "ls3Length", "ls4", "ls4Length"), file = "~/R/1876_2024_tiffsB.RData") 
-
-namesPlanktonBenthos <- gsub("_tiffDepths", "_plankBenth", namesTiff)
-ls5 <- ls()
-ls5 <- ls5[-c(namesTiff)]
-
-rm(i)
-ls5Length <- c()
-for (i in 1:length(ls5)){
-  ls5Length[i] <- nrow(get(ls5[i]))
-}
-
-save(list= c(namesTiff, "ls3", "ls3Length", "ls4", "ls4Length", "names", "namesTiff", "ls5", "ls5Length"), file = "~/R/1876_2024_tiffs.RData") 
-
-##End of the script 
 
 ########################################################################
 #Dups (+FILTER TO EDMONET AND NOREXP AND FORWARD, SEE TEMPO)
