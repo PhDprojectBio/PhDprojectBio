@@ -1,3 +1,69 @@
+############### 
+
+## geospatial data handling
+library(rgdal)
+library(raster)
+library(sp)
+library(mapdata)
+library(ncdf4)
+library(XML)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(downloader)
+library(directlabels)
+library(rasterVis)
+library(ggplot2)
+library(knitr)
+library(IRdisplay)
+library(repr)
+library(sf)
+
+#install.packages("remotes")
+#remotes::install_github("EMODnet/EMODnetWFS")
+library("EMODnetWFS")
+#View(emodnet_wfs())
+wfs_bathy <- emodnet_init_wfs_client(service = "bathymetry")
+info <- emodnet_get_wfs_info(wfs_bathy)
+wfs_bio <- emodnet_init_wfs_client(service = "biology_occurrence_data")
+info <- emodnet_get_wfs_info(wfs_bio)
+
+bathy <- emodnet_get_layers(
+  service = "bathymetry",
+  layers = c("download_tiles"), 
+  #BBOX = paste(xmin,ymin,xmax,ymax,sep=",")
+)
+
+bathy <- bathy[["download_tiles"]]
+View(bathy)
+#tif: 2:32
+#xyz: 504:474
+#2:32
+#rm(i)
+#i <- 1
+urls <- bathy$download_url[2:32] #Goes to D rows
+for(i in 1:length(urls)){
+  
+  download.file(url=urls[i],
+                destfile=gsub(" ","",paste("tile_",i,"2022.tif.zip")))
+  #unzip(zipfile = gsub(" ","",paste("tile_",i,"2022.tif.zip")), exdir = "\\\\home.ansatt.ntnu.no/lcgarcia/Documents/R")
+  route <- unzip(zipfile = gsub(" ","",paste("tile_",i,"2022.tif.zip")), exdir = "\\\\home.ansatt.ntnu.no/lcgarcia/Documents/R")
+  tif <- raster(route)
+  #xyz = rasterToPoints(tif, spatial = TRUE)
+  assign(gsub(" ","",paste("tif",i)), tif)
+  #writeOGR(xyz,"\\\\home.ansatt.ntnu.no/lcgarcia/Documents/R",gsub(" ","",paste("output_name.shp",i)), driver="ESRI Shapefile")
+}
+
+save.image("~/R/1900_23_tiffs.RData")
+summary(tif)
+
+
+
+
+
+
+
+
 ###########################
 
 
