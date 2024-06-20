@@ -1,3 +1,11 @@
+#1.Downloaded all GBIF (Biggest one)
+
+#Notes: correction in 2023 download gbif and repeat
+#See changes in R desktop script and upload them to gbif. Check!
+#Been following gbif.
+
+
+
 # I. Setting directory and charging libraries and installing packages if necessary.
 setwd("//myDirectory/myFolder/myDocuments/R")
 
