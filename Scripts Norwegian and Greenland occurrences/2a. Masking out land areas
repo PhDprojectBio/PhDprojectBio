@@ -1,3 +1,69 @@
+#2. Mask with all landshape and with world
+
+allgbif24 <- ls()
+allgbif24 <- allgbif24[-c(1,26,27)]
+allgbif24 <- allgbif24[13:24]
+allgbif24 
+
+#II. Masking the landshape out of databases                              
+
+library("ggplot2")
+theme_set(theme_bw())
+library("sf")
+
+#install.packages("rnaturalearth")
+library("rnaturalearth")
+#install.packages("rnaturalearthdata")
+library("rnaturalearthdata")
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world2 <- st_crop(world, xmin = -27, ymin = 50, xmax = 38, ymax = 85)
+
+#install.packages("ggspatial")
+library("ggspatial")
+
+allgbif24_mkd <- c()
+for (i in 1:length(allgbif24)){
+
+    x <- world2
+
+    y0 <- get(allgbif24[i])
+    y0$XCoord <- y0$decimalLongitude
+    y0$YCoord <- y0$decimalLatitude
+    assign(gsub(" ","",paste(allgbif24[i])),y0)
+    
+    y <- st_as_sf(x = get(allgbif24[i]),                         
+              coords = c("XCoord", "YCoord"),
+              crs = 4326)
+
+    y_int <- st_intersects(y,x)
+    y_log <- lengths(y_int) == 0 
+    databases_mkd <- y[y_log, ]
+
+    databases_mkd <- as.data.frame(databases_mkd)
+    
+    assign(gsub(" ","",paste(allgbif24[i], "_mkd")),databases_mkd)
+    allgbif24_mkd[i] <- gsub(" ","",paste(allgbif24[i], "_mkd"))
+}
+
+
+#3. Save allgbifs masked (take picture to the complete dataset values before)
+save.image("~/R/allgbif24_mkd.RData")     
+allnames <- ls()
+lengthsallnames <- c()
+allnames <- allnames[21:40]
+allnames
+for(i in 1:length(allnames)){
+  lengthsallnames[i] <- nrow(get(allnames[i]))
+}
+
+#rm(list=setdiff(ls(), allgbif24_mkd, allnames, lengthsallnames))   
+
+
+
+
+
+
 #I. Loading libraries and directory.
 setwd("//myDirectory/myFolder/myDocuments/R")
 
