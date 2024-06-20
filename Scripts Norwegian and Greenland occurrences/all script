@@ -1,72 +1,7 @@
 
 
 
-#Adjustment, check backwards
-emodc_mkd <- alledmo24_mkd
-emodc_mkd <- emodc_mkd[, !(colnames(emodc_mkd) %in% c("XCoord","YCoord"))]
 
-#######
-
-names <- ls()
-names <- names[c(28:39,55:66,11,48)]  #adjust accordingly to your environment. It must contain all masked downloads.
-names
-
-#############!Normalize names
-sort(names(gbifa_1876to99_mkd_worms))
-sort(names(obisb_1876to99_mkd_worms))
-sort(names(emodc_mkd))
-sort(names(nexpd_mkd))
-
-
-#Assigning "database" fields
-
-rm(i,x)
-for(i in 1:length(names)){
-  x <- get(names[i])
-  
-  if (i >= 1 & i <=12){
-    setnames(x, "datasetKey", "dataset")
-    setnames(x, "gbifID", "id")
-    setnames(x, "issue", "flags")
-    x$database <- "gbif"
-    x$id = as.character(x$id)
-    x$dateIdentified = as.character(x$dateIdentified)
-  }
-  
-  if (i >= 13 & i <=24){
-    setnames(x, "datasetName", "dataset")
-    setnames(x, "eventID", "depthAccuracy")
-    x$depthAccuracy <- 0.999999
-    x$database <- "obis"
-  }
-  
-  if (i == 25){
-    x$database <- "emodnet"
-  }
-  
-  if (i == 26){
-    x$database <- "NNAexp86-88"
-  }
-  
-  x$year = as.numeric(x$year)
-  x$month = as.numeric(x$month)
-  x$day = as.numeric(x$day)
-  x$coordinateUncertaintyInMeters = as.numeric(x$coordinateUncertaintyInMeters)
-  x$individualCount = as.numeric(x$individualCount)
-  
-  x$scientificName = str_extract(string = x$scientificName, pattern = "[a-zA-Z]{1,25}\\s{1}[a-z]{2,25}")
-  
-  assign(names[i], x)
-} 
-
-
-#III. Assigning new fields 
-
-library("ggplot2")
-library("sf")
-library("rnaturalearth")
-library("rnaturalearthdata")
-library("ggspatial")
 
 
 #Interpolating contours "_extDepths"
