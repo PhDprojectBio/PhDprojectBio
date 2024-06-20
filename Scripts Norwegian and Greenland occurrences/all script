@@ -1,25 +1,4 @@
-#loading libraries and directory
-setwd("//myDirectory/myFolder/myDocuments/R")
 
-library(janitor)
-library(tibble)
-library(stringr)
-library(dplyr)
-library(data.table)
-library(sf)
-library(s2)
-library(stars)
-library(ggplot2)
-library(wdpar)
-library(vegan)
-
-
-#####Do all downloads and loads :) !!!
-### Landshape and worms filtering, except in EMODnet y NAexp the last one.
-#See 10c. From WalR Emodnet.
-#See steps script.
-#See 2a. Building up - general database and missing depths.
-#Import to the environment.
 
 
 #Adjustment, check backwards
