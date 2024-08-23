@@ -1,12 +1,6 @@
-#1.Downloaded all GBIF (Biggest one)
+#1a. Downloading GBIF records.
 
-#Notes: correction in 2023 download gbif and repeat
-#See changes in R desktop script and upload them to gbif. Check!
-#Been following gbif.
-
-
-
-# I. Setting directory and charging libraries and installing packages if necessary.
+#I. Setting directory and loading libraries (install packages if necessary).
 setwd("//myDirectory/myFolder/myDocuments/R")
 
 library(janitor)
@@ -20,8 +14,9 @@ library(stars)
 library(ggplot2)
 library(wdpar)
 library(readxl)
+library(rgbif)
 
-# II. Setting up the GBIF's Username and Password and requesting and importing the information.
+#II. Setting up GBIF's Username and Password.
 
 install.packages("usethis")
 usethis::edit_r_environ()
@@ -30,14 +25,10 @@ usethis::edit_r_environ()
 #GBIF_PWD="here..."
 #GBIF_EMAIL="here..."
 
-install.packages("rgbif") 
-library(rgbif)
+#III. Setting the request to the server.
+#GBIF allows up to three simultaneous downloads. To check the status of the download, see step 2.
 
-# GBIF allows up to three simultaneous downloads. To check the status of the download and import the records to R, see step 2.
-
-#A. Setting the request to the server.
-
-#1. Between 1876 and 1899
+# Between 1876 and 1899
 gbif_1876to99 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -48,7 +39,7 @@ gbif_1876to99 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#2. Between 1900 and 1949
+# Between 1900 and 1949
 gbif_1900to49 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -59,7 +50,7 @@ gbif_1900to49 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#3. Between 1950 and 1959
+# Between 1950 and 1959
 gbif_1950to59 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -70,7 +61,7 @@ gbif_1950to59 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#4. Between 1960 and 1969
+# Between 1960 and 1969
 gbif_1960to69 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -81,7 +72,7 @@ gbif_1960to69 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#5. Between 1970 and 1979
+# Between 1970 and 1979
 gbif_1970to79 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -92,7 +83,7 @@ gbif_1970to79 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#6. Between 1980 and 1989
+# Between 1980 and 1989
 gbif_1980to89 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -103,7 +94,7 @@ gbif_1980to89 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#7. Between 1990 and 1999
+# Between 1990 and 1999
 gbif_1990to99 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -114,7 +105,7 @@ gbif_1990to99 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#8. Between 2000 and 2004
+# Between 2000 and 2004
 gbif_2000to04 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -125,7 +116,7 @@ gbif_2000to04 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#9. Between 2005 and 2009
+# Between 2005 and 2009
 gbif_2005to09 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -136,7 +127,7 @@ gbif_2005to09 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#10. Between 2010 and 2014
+# Between 2010 and 2014
 gbif_2010to14 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -147,7 +138,7 @@ gbif_2010to14 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#11. Between 2015 and 2019
+# Between 2015 and 2019
 gbif_2015to19 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -158,7 +149,7 @@ gbif_2015to19 <- occ_download(
   format = "SIMPLE_CSV"
 )
 
-#12. Between 2020 and 2024
+# Between 2020 and 2024
 gbif_2020to24 <- occ_download(
   pred("hasGeospatialIssue", FALSE),
   pred("hasCoordinate", TRUE),
@@ -170,62 +161,61 @@ gbif_2020to24 <- occ_download(
 )
 
 #IMPORTANT NOTE:
-# always cite the doi
-# citation example: GBIF Occurrence Download https://doi.org/10.15468/dl.w9cyk3 Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 08 August 2023. GBIF.org
-# You can get it calling the object that you just downloaded (i.e. gbif_2020to23)
-# The dataset produced in R will have a slightly different name to differentiate it from the object that holds the citation text.
+#always cite the DOI
+#citation example: GBIF Occurrence Download https://doi.org/10.15468/dl.w9cyk3 Accessed from R via rgbif (https://github.com/ropensci/rgbif) on 08 August 2023. GBIF.org
+#You can get it calling the object that you just downloaded (i.e. gbif_2020to23)
 
-#B. Checking the status of the download in the server and retrieving the datasets in R. 
+#IV. Checking the status of the download in the server and retrieving the datasets into R. 
 
-#1. gbif_1876to99 (here are the citation guidelines). To check the status and import the download:
-occ_download_wait(head(gbif_1876to99))
-gbifa_1876to99 <- occ_download_get(head(gbif_1876to99)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
+# gbif_1876to99 #to check the citation
+occ_download_wait(head(gbif_1876to99)) #to check the status
+gbifa_1876to99 <- occ_download_get(head(gbif_1876to99)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "") #to import the download
 
-#2. gbif_1900to49
+# gbif_1900to49
 occ_download_wait(head(gbif_1900to49))
 gbifa_1900to49 <- occ_download_get(head(gbif_1900to49)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#3. gbif_1950to59
+# gbif_1950to59
 occ_download_wait(head(gbif_1950to59))
 gbifa_1950to59 <- occ_download_get(head(gbif_1950to59)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#4. gbif_1960to69 
+# gbif_1960to69 
 occ_download_wait(head(gbif_1960to69))
 gbifa_1960to69 <- occ_download_get(head(gbif_1960to69)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#5. gbif_1970to79 
+# gbif_1970to79 
 occ_download_wait(head(gbif_1970to79))
 gbifa_1970to79 <- occ_download_get(head(gbif_1970to79)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#6. gbif_1980to89 
+# gbif_1980to89 
 occ_download_wait(head(gbif_1980to89))
 gbifa_1980to89 <- occ_download_get(head(gbif_1980to89)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#7. gbif_1990to99
+# gbif_1990to99
 occ_download_wait(head(gbif_1990to99))
 gbifa_1990to99 <- occ_download_get(head(gbif_1990to99)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#8. gbif_2000to04
+# gbif_2000to04
 occ_download_wait(head(gbif_2000to04))
 gbifa_2000to04 <- occ_download_get(head(gbif_2000to04)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#9. gbif_2005to09
+# gbif_2005to09
 occ_download_wait(head(gbif_2005to09))
 gbifa_2005to09 <- occ_download_get(head(gbif_2005to09)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#10. gbif_2010to14
+# gbif_2010to14
 occ_download_wait(head(gbif_2010to14))
 gbifa_2010to14 <- occ_download_get(head(gbif_2010to14)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#11. gbif_2015to19
+# gbif_2015to19
 occ_download_wait(head(gbif_2015to19))
 gbifa_2015to19 <- occ_download_get(head(gbif_2015to19)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#12. gbif_2020to24
+# gbif_2020to24
 occ_download_wait(head(gbif_2020to24))
 gbifa_2020to24 <- occ_download_get(head(gbif_2020to24)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-#C. Select the fields that you need to work with.
+#V. Select the fields that you need to work with (18 fields for this work).
 
 gbifa_1876to99 = gbifa_1876to99[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
 gbifa_1900to49 = gbifa_1900to49[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
@@ -242,6 +232,5 @@ gbifa_2005to09 = gbifa_2005to09[c("coordinateUncertaintyInMeters", "class", "dat
 gbifa_2010to14 = gbifa_2010to14[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
 gbifa_2015to19 = gbifa_2015to19[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
 gbifa_2020to24 = gbifa_2020to24[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
-
 
 ##End of the script
