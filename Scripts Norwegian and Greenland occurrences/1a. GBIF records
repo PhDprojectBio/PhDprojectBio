@@ -167,51 +167,51 @@ gbif_2020to24 <- occ_download(
 
 #IV. Checking the status of the download in the server and retrieving the datasets into R. 
 
-# gbif_1876to99 #to check the citation
+gbif_1876to99 #to check the citation
 occ_download_wait(head(gbif_1876to99)) #to check the status
 gbifa_1876to99 <- occ_download_get(head(gbif_1876to99)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "") #to import the download
 
-# gbif_1900to49
+gbif_1900to49
 occ_download_wait(head(gbif_1900to49))
 gbifa_1900to49 <- occ_download_get(head(gbif_1900to49)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-# gbif_1950to59
+gbif_1950to59
 occ_download_wait(head(gbif_1950to59))
 gbifa_1950to59 <- occ_download_get(head(gbif_1950to59)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-# gbif_1960to69 
+gbif_1960to69 
 occ_download_wait(head(gbif_1960to69))
 gbifa_1960to69 <- occ_download_get(head(gbif_1960to69)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-# gbif_1970to79 
+gbif_1970to79 
 occ_download_wait(head(gbif_1970to79))
 gbifa_1970to79 <- occ_download_get(head(gbif_1970to79)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-# gbif_1980to89 
+gbif_1980to89 
 occ_download_wait(head(gbif_1980to89))
 gbifa_1980to89 <- occ_download_get(head(gbif_1980to89)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-# gbif_1990to99
+gbif_1990to99
 occ_download_wait(head(gbif_1990to99))
 gbifa_1990to99 <- occ_download_get(head(gbif_1990to99)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-# gbif_2000to04
+gbif_2000to04
 occ_download_wait(head(gbif_2000to04))
 gbifa_2000to04 <- occ_download_get(head(gbif_2000to04)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-# gbif_2005to09
+gbif_2005to09
 occ_download_wait(head(gbif_2005to09))
 gbifa_2005to09 <- occ_download_get(head(gbif_2005to09)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-# gbif_2010to14
+gbif_2010to14
 occ_download_wait(head(gbif_2010to14))
 gbifa_2010to14 <- occ_download_get(head(gbif_2010to14)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-# gbif_2015to19
+gbif_2015to19
 occ_download_wait(head(gbif_2015to19))
 gbifa_2015to19 <- occ_download_get(head(gbif_2015to19)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
-# gbif_2020to24
+gbif_2020to24
 occ_download_wait(head(gbif_2020to24))
 gbifa_2020to24 <- occ_download_get(head(gbif_2020to24)) %>% occ_download_import(header = TRUE, sep = "\t", na.strings = "NA", fill = TRUE) #,quote = "")
 
