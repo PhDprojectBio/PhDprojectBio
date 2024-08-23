@@ -233,4 +233,5 @@ gbifa_2010to14 = gbifa_2010to14[c("coordinateUncertaintyInMeters", "class", "dat
 gbifa_2015to19 = gbifa_2015to19[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
 gbifa_2020to24 = gbifa_2020to24[c("coordinateUncertaintyInMeters", "class", "datasetKey", "dateIdentified", "day", "decimalLatitude", "decimalLongitude", "depth", "depthAccuracy", "family", "gbifID", "individualCount", "issue", "kingdom", "month", "scientificName", "taxonRank", "year")]
 
+
 ##End of the script
