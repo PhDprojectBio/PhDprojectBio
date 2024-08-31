@@ -1,0 +1,73 @@
+#loading libraries and directory    
+setwd("//myDirectory/myFolder/myDocuments/R")
+
+library(janitor)
+library(tibble)
+library(stringr)
+library(dplyr)
+library(data.table)
+library(sf)
+library(s2)
+library(stars)
+library(ggplot2)
+library(wdpar)
+library(vegan) 
+
+#some important data, adapt the selection to the environment
+
+envo <- ls()
+envo
+gbif1Keys <- envo[19:30]
+rm(i)
+for(i in 1:length(gbif1Keys)){
+  gbif1Keys[i] <- get(gbif1Keys[i])
+}
+
+gbif1Worms <- envo[31:42]
+rm(i)
+for(i in 1:length(gbif1Worms)){
+  gbif1Worms[i] <- nrow(get(gbif1Worms[i]))
+}
+
+obis2All <- envo[61:72]
+rm(i)
+for(i in 1:length(obis2All)){
+  obis2All[i] <- nrow(get(obis2All[i]))
+}
+
+obis2Mkd <- c("obisb_1876to99_mkd","obisb_1900to49_mkd", "obisb_1950to59_mkd", "obisb_1960to69_mkd",
+              "obisb_1970to79_mkd", "obisb_1980to89_mkd", "obisb_1990to99_mkd",
+              "obisb_2000to04_mkd", "obisb_2005to09_mkd", "obisb_2010to14_mkd",
+              "obisb_2015to19_mkd", "obisb_2020to24_mkd")
+rm(i)
+for(i in 1:length(obis2Mkd)){
+  obis2Mkd[i] <- nrow(get(obis2Mkd[i]))
+}
+
+obis2Worms <- c("obisb_1876to99_mkd_worms",
+                "obisb_1900to49_mkd_worms", "obisb_1950to59_mkd_worms", "obisb_1960to69_mkd_worms",
+                "obisb_1970to79_mkd_worms", "obisb_1980to89_mkd_worms", "obisb_1990to99_mkd_worms",
+                "obisb_2000to04_mkd_worms", "obisb_2005to09_mkd_worms", "obisb_2010to14_mkd_worms",
+                "obisb_2015to19_mkd_worms", "obisb_2020to24_mkd_worms")
+rm(i)
+for(i in 1:length(obis2Worms)){
+  obis2Worms[i] <- nrow(get(obis2Worms[i]))
+}
+
+gbif2Worms <- envo[23:34]
+rm(i)
+for(i in 1:length(gbif2Worms)){
+  gbif2Worms[i] <- nrow(get(gbif2Worms[i]))
+}
+
+table1 <- cbind(gbif1Keys,gbif1Worms,obis2All,obis2Mkd,obis2Worms,gbif2Worms)
+table1
+
+
+###APPLY SCRIPT STEPS for GBIF and OBIS. Those steps are independently written for EMODnet and NNAexp.
+
+
+
+
+
+
