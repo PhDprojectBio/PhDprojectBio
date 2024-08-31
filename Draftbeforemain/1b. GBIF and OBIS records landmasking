@@ -1,0 +1,48 @@
+#II. Masking the landshape out
+
+allgbif24 <- ls()
+allgbif24 <- allgbif24[13:24]
+allgbif24 
+
+library("ggplot2")
+theme_set(theme_bw())
+library("sf")
+
+#install.packages("rnaturalearth")
+library("rnaturalearth")
+#install.packages("rnaturalearthdata")
+library("rnaturalearthdata")
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world2 <- st_crop(world, xmin = -27, ymin = 50, xmax = 38, ymax = 85)
+
+#install.packages("ggspatial")
+library("ggspatial")
+
+allgbif24_mkd <- c()
+for (i in 1:length(allgbif24)){
+  
+  x <- world2
+  
+  y0 <- get(allgbif24[i])
+  y0$XCoord <- y0$decimalLongitude
+  y0$YCoord <- y0$decimalLatitude
+  assign(gsub(" ","",paste(allgbif24[i])),y0)
+  
+  y <- st_as_sf(x = get(allgbif24[i]),                         
+                coords = c("XCoord", "YCoord"),
+                crs = 4326)
+  
+  y_int <- st_intersects(y,x)
+  y_log <- lengths(y_int) == 0 
+  databases_mkd <- y[y_log, ]
+  
+  databases_mkd <- as.data.frame(databases_mkd)
+  
+  assign(gsub(" ","",paste(allgbif24[i], "_mkd")),databases_mkd)
+  allgbif24_mkd[i] <- gsub(" ","",paste(allgbif24[i], "_mkd"))
+}
+
+
+
+
