@@ -1,0 +1,105 @@
+############HERE BEGINS THE DIVISION BETWEEN S AND D
+#II. Getting the two depth intervals (0-500m and 500 and below)
+
+namesShallow <- c()
+namesDeep <- c()
+
+rm(i)
+for (i in 1:length(names)){
+  
+  df <- get(namesContours[i])
+  namesShallow[i] <- gsub(" ","",paste(names[i],"_shallow"))
+  namesDeep[i] <- gsub(" ","",paste(names[i],"_deep"))
+  shallow <- df %>% filter(depth<500 | minContour == 0)
+  assign(gsub(" ","",paste(names[i],"_shallow")),shallow)
+  deep <- df %>% filter(depth>=500 | minContour > 0)
+  assign(gsub(" ","",paste(names[i],"_deep")),deep)
+  namesShallowDeep <- c(namesShallow, namesDeep)
+} 
+rm(i,shallow,deep)
+
+
+#III. Assigning new fields       
+
+library("ggplot2")
+library("sf")
+library("rnaturalearth")
+library("rnaturalearthdata")
+library("ggspatial")
+
+#There are records that register depths in a different contour than they are supposed to be. Here we mask by contour first, then they can be plotted (applying the masking correction that comes in the block below first.
+#This is based on the content of the script 3a. This is for register of the min and max contours. Consider merging with the last script.
+
+rm(i,x,a,y0)     
+
+#Quick way to pass thru contours (it is needed to pass both shallow and deep sets separately thru this for the next step)
+for (i in 1:length(namesShallowDeep)){ #           
+  
+  mn <- 0
+  mx <- 500
+  while (mn < 6000){
+    
+    x <- st_read(as.character(gsub(" ","",paste("contour",mn,"_",mx,".shp"))))
+    
+    if(i == 14 | i == 40){
+      dbs_mkd_taxa_new1xxx_1899_coordinated <- get(namesShallowDeep[i]) %>% filter(!is.na(decimalLongitude) | !is.na(decimalLatitude))
+      dbs_mkd_taxa_new1xxx_1899_coordinated$XCoord <- dbs_mkd_taxa_new1xxx_1899_coordinated$decimalLongitude
+      dbs_mkd_taxa_new1xxx_1899_coordinated$YCoord <- dbs_mkd_taxa_new1xxx_1899_coordinated$decimalLatitude
+      y <- st_as_sf(x = dbs_mkd_taxa_new1xxx_1899_coordinated,                         
+                    coords = c("XCoord", "YCoord"),
+                    crs = 4326)
+    }
+    
+    if(i != 14 | i != 40){
+      y0 <- get(namesShallowDeep[i]) %>% filter(!is.na(decimalLongitude) | !is.na(decimalLatitude))
+      y0$XCoord <- y0$decimalLongitude
+      y0$YCoord <- y0$decimalLatitude
+      y <- st_as_sf(x = y0,                         
+                    coords = c("XCoord", "YCoord"),
+                    crs = 4326)
+    }
+    
+    y_int <- st_intersects(y,x)
+    y_log <- lengths(y_int) > 0 
+    mkd <- y[y_log, ]  
+    mkd$XCoord <- st_coordinates(mkd$geometry)[,1]
+    mkd$YCoord <- st_coordinates(mkd$geometry)[,2]
+    mkd <- as.data.frame(mkd)
+    
+    #The records with depth were not contoured before, then here we assign the contour, to perform the calculations below.
+    if(nrow(mkd) > 0){
+      for(a in nrow(mkd)){
+        if(is.na(mkd$minContour)[a]){
+          mkd$minContour <- mn
+          mkd$maxContour <- mx   }}}
+    
+    assign(gsub(" ","",paste(namesShallowDeep[i],"_mkd_",mn,"_",mx)), mkd)
+    
+    if (mn == 0){
+      mkd_allcont <- mkd  }
+    if (mn > 0){
+      mkd_allcont <- rbind(mkd_allcont,mkd)  }
+    
+    mn <- mn + 500
+    mx <- mx + 500
+    rm(a)
+  }
+    
+  #get the set that probably correspond to the polygon and graphically represent the result to confirm it and join to the corresponding depth (0to500)
+  if(i == 14 | i == 40){
+    polygon <- anti_join(as.data.frame(dbs_mkd_taxa_new1xxx_1899_coordinated),as.data.frame(mkd_allcont))  }
+  
+  if(i != 14 | i != 40){
+    polygon <- anti_join(as.data.frame(get(namesShallowDeep[i])),as.data.frame(mkd_allcont))   }
+  
+  #The records with depth were not contoured before, then here we assign the contour, to perform the calculations below.
+  if(nrow(polygon) > 0){
+    for(a in nrow(polygon)){
+      if(is.na(polygon$minContour)[a]){
+        polygon$minContour <- mn
+        polygon$maxContour <- mx    }}}  
+  
+  polcontour <- rbind(get(gsub(" ","",paste(namesShallowDeep[i],"_mkd_0_500"))), polygon)
+  assign(gsub(" ","",paste(namesShallowDeep[i],"_mkd_0_500")), polcontour)
+  rm(x,y,a, mkd)
+}
