@@ -127,4 +127,31 @@ for (i in 1:length(names)){
   }
 } 
 
+##Create the objects for the depths without records
+rm(x,y,i)
+for(i in 1:length(names)){ #1:
+  mn <- 0
+  mx <- 500
+  
+  while (mn < 6000){
+    
+    adddepth <- get(gsub(" ","",paste(names[i],"_",mn,"_",mx)))
+    
+    if (nrow(adddepth) == 0){
+      assign(gsub(" ","",paste(names[i],"_",mn,"_",mx,"_adddepth")),adddepth)
+    }
+    
+    mn <- mn + 500
+    mx <- mx + 500
+  }
+}
+
+###500m bands shallow and deep and inference for plankton data by contours
+#These are the keeping objects and the labels for the years
+namesContours <- gsub("worms", "worms_extDepthsbind", names)
+namesContours[14] <- "nexpd_mkd_extDepthsbind" 
+namesContours
+
 ###End of the script
+
+
