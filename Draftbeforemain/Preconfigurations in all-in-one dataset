@@ -1,0 +1,45 @@
+#Adjustment, check backwards
+#emodc_mkd_worms <- alledmo24_mkd_worms
+
+#######
+names <- c("emodc_mkd_worms", "gbifa_1876to99_mkd_worms", "gbifa_1900to49_mkd_worms",
+           "gbifa_1950to59_mkd_worms", "gbifa_1960to69_mkd_worms", "gbifa_1970to79_mkd_worms",
+           "gbifa_1980to89_mkd_worms", "gbifa_1990to99_mkd_worms", "gbifa_2000to04_mkd_worms",
+           "gbifa_2005to09_mkd_worms", "gbifa_2010to14_mkd_worms", "gbifa_2015to19_mkd_worms",
+           "gbifa_2020to24_mkd_worms", "nexpd_mkd", "obisb_1876to99_mkd_worms",
+           "obisb_1900to49_mkd_worms", "obisb_1950to59_mkd_worms", "obisb_1960to69_mkd_worms",
+           "obisb_1970to79_mkd_worms", "obisb_1980to89_mkd_worms", "obisb_1990to99_mkd_worms",
+           "obisb_2000to04_mkd_worms", "obisb_2005to09_mkd_worms", "obisb_2010to14_mkd_worms",
+           "obisb_2015to19_mkd_worms", "obisb_2020to24_mkd_worms")
+names
+
+#Assigning "database" fields 
+rm(i,x)
+for(i in 1:length(names)){
+  x <- get(names[i])
+  
+  if (i >= 2 & i <=13){
+    setnames(x, "datasetKey", "dataset")
+    setnames(x, "gbifID", "id")
+    setnames(x, "issue", "flags")
+    x$database <- "gbif"
+    x$id = as.character(x$id)
+    x$dateIdentified = as.character(x$dateIdentified)  }  
+  if (i >= 15 & i <=26){
+    setnames(x, "datasetName", "dataset")
+    setnames(x, "eventID", "depthAccuracy")
+    x$depthAccuracy <- NA 
+    x$database <- "obis"  } 
+  if (i == 1){
+    x$database <- "emodnet"  }
+  if (i == 14){
+    x$database <- "NNAexp86-88"  }
+
+  x$year = as.numeric(x$year) 
+  x$month = as.numeric(x$month)
+  x$day = as.numeric(x$day)
+  x$coordinateUncertaintyInMeters = as.numeric(x$coordinateUncertaintyInMeters)
+  x$individualCount = as.numeric(x$individualCount)
+  x$scientificName = str_extract(string = x$scientificName, pattern = "[a-zA-Z]{1,25}\\s{1}[a-z]{2,25}")
+  assign(names[i], x)
+} 
