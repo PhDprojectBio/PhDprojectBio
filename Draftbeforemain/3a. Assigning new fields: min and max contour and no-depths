@@ -1,0 +1,130 @@
+#II. Assigning new fields    
+
+library("ggplot2")
+library("sf")
+library("rnaturalearth")
+library("rnaturalearthdata")
+library("ggspatial")
+
+#Splitting in 500m depth intervals 
+#Assigning depth bands min contour and max contour and filling missing depths with NA and assigning corresponding depthAccuracies of 0.999999
+
+rm(i,x,a,y0,mn,mx,y)
+for (i in 1:length(names)){
+  
+  #I. Split records that do not have recorded depth from those that have recorded depth 
+  
+  y0 <- get(names[i])
+  
+  nodepth_mkd <- y0 %>% filter(is.na(depth))
+  nodepth_mkd$XCoord <- nodepth_mkd$decimalLongitude
+  nodepth_mkd$YCoord <- nodepth_mkd$decimalLatitude
+  
+  depth_mkd <- y0 %>% filter(!is.na(depth)) #anti_join(dbs_mkd_taxa, nodepth_mkd) #records with depth (excluding the ones with no depth)
+  depth_mkd$XCoord <- depth_mkd$decimalLongitude
+  depth_mkd$YCoord <- depth_mkd$decimalLatitude
+
+ if(nrow(nodepth_mkd) > 0){
+    #II. Retrieving depths for records that do not have depth    
+    mn <- 0
+    mx <- 500
+    
+    while (mn < 6000){
+      
+      x <- st_read(as.character(gsub(" ","",paste("contour",mn,"_",mx,".shp"))))
+      
+      if(i == 14){ #For 1876_99 only. Records with no recorded coordinates need to be excluded in this step.
+        nodepth_mkd_noNA <- nodepth_mkd %>% filter(!is.na(nodepth_mkd$XCoord) | !is.na(nodepth_mkd$YCoord))
+        nodepth_mkd_NA <- nodepth_mkd %>% filter(is.na(nodepth_mkd$XCoord) | is.na(nodepth_mkd$YCoord))
+        y <- st_as_sf(x = nodepth_mkd_noNA,      #For all except 1876_99: nodepth_mkd                   
+                      coords = c("XCoord", "YCoord"),
+                      crs = 4326)  }
+      
+      if(i != 14){
+        y <- st_as_sf(x = nodepth_mkd,      #For all except 1876_99: nodepth_mkd                   
+                      coords = c("XCoord", "YCoord"),
+                      crs = 4326)  }
+  
+      y_int <- st_intersects(y,x)
+      y_log <- lengths(y_int) > 0 
+      mkd <- y[y_log, ]
+      mkd$XCoord <- st_coordinates(mkd$geometry)[,1]
+      mkd$YCoord <- st_coordinates(mkd$geometry)[,2]
+      mkd <- as.data.frame(mkd)
+      
+      if(nrow(mkd) > 0){
+        mkd$minContour <- mn
+        mkd$maxContour <- mx  }
+     
+      assign(gsub(" ","",paste(names[i],"_",mn,"_",mx)), mkd)
+
+      if (mn == 0){
+        mkd_allcont <- mkd  }
+      
+      if (mn > 0 & nrow(mkd) > 0){
+        mkd_allcont <- rbind(mkd_allcont,mkd)  }
+      
+      mn <- mn + 500
+      mx <- mx + 500 
+    }
+
+    #get the set that probably correspond to the polygon and graphically represent the result to confirm it and join to the corresponding depth (0to500)
+    #For 1876_99 only
+    if(i == 14){
+      polygon <- anti_join(nodepth_mkd_noNA,mkd_allcont)    }
+    
+    if(i != 14){
+      polygon <- anti_join(nodepth_mkd,mkd_allcont)    }
+    
+    if(nrow(polygon) > 0){
+      polygon$minContour <- 0
+      polygon$maxContour <- 500    }
+    
+    polygon$XCoord <- polygon$decimalLongitude
+    polygon$YCoord <- polygon$decimalLatitude
+    mkd_0_500 <- rbind(get(gsub(" ","",paste(names[i],"_0_500"))), polygon)
+    assign(gsub(" ","",paste(names[i],"_0_500")), mkd_0_500)
+    
+    #Assigning depths accordingly to the contours 
+    rm(x,y)
+    mn <- 0
+    mx <- 500
+    while (mn < 6000){  
+      adddepth <- get(gsub(" ","",paste(names[i],"_",mn,"_",mx)))
+      
+      if (nrow(adddepth) > 0){
+        adddepth$depth <- NA
+        adddepth$depthAccuracy <- 0.999999   #To identify records with missing depths through depthAccuracy
+        assign(gsub(" ","",paste(names[i],"_",mn,"_",mx,"_adddepth")),adddepth)    }
+
+      #Creating a new nodepth records with new established depths
+      if (mn == 0){
+        nodepth_mkd_new <- adddepth    }
+      
+      if (mn > 0 & nrow(adddepth) > 0){
+        nodepth_mkd_new <- rbind(nodepth_mkd_new,adddepth)    }
+      
+      mn <- mn + 500
+      mx <- mx + 500
+    }
+    
+    #III. Joining record with retrieved depths with those that had depths recorded already. 
+    if(i == 14){
+      depth_mkd$minContour <- NA
+      depth_mkd$maxContour <- NA
+      nodepth_mkd_NA$minContour <- NA
+      nodepth_mkd_NA$maxContour <- NA
+      dbs_mkd_taxa_new <- rbind(depth_mkd,nodepth_mkd_new,nodepth_mkd_NA)   }  
+
+     if(i != 14){
+      depth_mkd$minContour <- NA
+      depth_mkd$maxContour <- NA
+      dbs_mkd_taxa_new <- rbind(depth_mkd,nodepth_mkd_new)   } 
+    
+    assign(gsub(" ","",paste(names[i],"_extDepths")),nodepth_mkd_new)
+    assign(gsub(" ","",paste(names[i],"_extDepthsbind")),dbs_mkd_taxa_new)
+
+  }
+} 
+
+###End of the script
