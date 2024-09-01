@@ -21,28 +21,28 @@ for (i in 1:length(namesShallowDeep)){
             if(setone$depth[a] >= 500 & !is.na(setone$depth[a])){
               setone$matchContour[a] <- "diffMatch"  }}}
 
-   #merging into one datatable with the new field contours
-        if (mn > 0){
+         #merging into one datatable with the new field contours
+          if (mn > 0){
           setone$matchContour <- "probPlanktonShallowSet"   }}
       
       if(i > 26){ 
-        #setting the oceanic province        
-        if(mn == 0){setone$oProvince <- "epipelagic and mesopelagic"}
-        if(mn == 500){setone$oProvince <- "mesopelagic"}
-        if(mn >= 1000 & mn < 4000){setone$oProvince <- "bathypelagic"}
-        if(mn >= 4000){setone$oProvince <- "abyssopelagic"}
-        
-        if (mn == 0){
+          #setting the oceanic province        
+            if(mn == 0){setone$oProvince <- "epipelagic and mesopelagic"}
+            if(mn == 500){setone$oProvince <- "mesopelagic"}
+            if(mn >= 1000 & mn < 4000){setone$oProvince <- "bathypelagic"}
+            if(mn >= 4000){setone$oProvince <- "abyssopelagic"}
+
+          if (mn == 0){
           setone$matchContour <- "shallowFromDeepSet" }
         
-        #merging into one datatable with the new field contours
+          #merging into one datatable with the new field contours
         
-        if (mn > 0){setone$matchContour <- "matchDeep" 
-          for(a in 1:nrow(setone)){
-            if((setone$depth[a] >= 0 & setone$depth[a] < setone$minContour[a]) & !is.na(setone$depth[a]) & !is.na(setone$minContour[a])){
-              setone$matchContour[a] <- "probPlanktonDeepSet"   }
-            if((setone$depth[a] >= setone$maxContour[a]) & !is.na(setone$depth[a]) & !is.na(setone$minContour[a])){
-              setone$matchContour[a] <- "diffMatch"   }}}}}
+          if (mn > 0){setone$matchContour <- "matchDeep" 
+            for(a in 1:nrow(setone)){
+              if((setone$depth[a] >= 0 & setone$depth[a] < setone$minContour[a]) & !is.na(setone$depth[a]) & !is.na(setone$minContour[a])){
+                setone$matchContour[a] <- "probPlanktonDeepSet"   }
+              if((setone$depth[a] >= setone$maxContour[a]) & !is.na(setone$depth[a]) & !is.na(setone$minContour[a])){
+                setone$matchContour[a] <- "diffMatch"   }}}}}
 
         if(mn == 0){settwo <- setone}
         if(mn > 0){settwo <- rbind(settwo, setone) }
@@ -54,3 +54,28 @@ for (i in 1:length(namesShallowDeep)){
         assign(gsub(" ","",paste(namesShallowDeep[i], "_diffmatch")),settwo)  
         rm(x,y,a, setone, setwo)
       }
+
+#These are the keeping objects
+namesContoursprovincesShallow <- gsub("shallow", "shallow_diffmatch", namesShallow)
+namesContoursprovincesDeep <- gsub("deep", "deep_diffmatch", namesDeep)
+namesContoursprovinces <- gsub("worms", "worms_diffmatch", names)
+namesContoursprovinces[14] <- "nexpd_mkd_diffmatch"     
+namesContoursprovinces
+
+#Merge
+rm(i,x,a,b) 
+for(i in 1:length(names)){
+  a <- get(namesContoursprovincesShallow[i])
+  b <- get(namesContoursprovincesDeep[i])
+  x <- rbind(a,b) 
+  assign(gsub(" ","",paste(names[i], "_diffmatch")),x) 
+}
+
+#removing duplicated until this point  
+rm(x,i)
+for (i in 1:length(namesContoursprovinces)){
+  x <- get(namesContoursprovinces[i])
+  x2 <- x[!duplicated(x$id),]
+  assign(namesContoursprovinces[i],x2)
+}
+
