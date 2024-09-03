@@ -121,9 +121,7 @@ for (i in 1:length(names)){
       depth_mkd$maxContour <- NA
       dbs_mkd_taxa_new <- rbind(depth_mkd,nodepth_mkd_new)   } 
     
-    assign(gsub(" ","",paste(names[i],"_extDepths")),nodepth_mkd_new)
     assign(gsub(" ","",paste(names[i],"_extDepthsbind")),dbs_mkd_taxa_new)
-
   }
 } 
 
