@@ -68,7 +68,7 @@ for (i in 1:length(namesShallowDeep)){ #
     
     #The records with depth were not contoured before, then here we assign the contour, to perform the calculations below.
     if(nrow(mkd) > 0){
-      for(a in nrow(mkd)){
+      for(a in 1:nrow(mkd)){
         if(is.na(mkd$minContour[a])){
           mkd$minContour <- mn
           mkd$maxContour <- mx   }}}
@@ -84,7 +84,7 @@ for (i in 1:length(namesShallowDeep)){ #
     mx <- mx + 500
     rm(a)
   }
-    
+  
   #get the set that probably correspond to the polygon and graphically represent the result to confirm it and join to the corresponding depth (0to500)
   if(i == 14 | i == 40){
     polygon <- anti_join(as.data.frame(dbs_mkd_taxa_new1xxx_1899_coordinated),as.data.frame(mkd_allcont))  }
@@ -94,12 +94,12 @@ for (i in 1:length(namesShallowDeep)){ #
   
   #The records with depth were not contoured before, then here we assign the contour, to perform the calculations below.
   if(nrow(polygon) > 0){
-    for(a in nrow(polygon)){
+    for(a in 1:nrow(polygon)){
       if(is.na(polygon$minContour[a])){
-        polygon$minContour <- mn
-        polygon$maxContour <- mx    }}}  
+        polygon$minContour <- 0
+        polygon$maxContour <- 500    }}}  
   
   polcontour <- rbind(get(gsub(" ","",paste(namesShallowDeep[i],"_mkd_0_500"))), polygon)
   assign(gsub(" ","",paste(namesShallowDeep[i],"_mkd_0_500")), polcontour)
-  rm(x,y,a, mkd)
+  rm(x,y,a)
 }
